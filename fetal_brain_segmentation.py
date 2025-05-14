@@ -18,12 +18,18 @@ import re
 import pandas as pd
 import threading
 
-os.system("git lfs pull")
+try:
+    os.system("git lfs pull")
+except Exception as e:
+    print("Error al ejecutar git lfs pull:", e)
 
-# Definir la ruta absoluta del modelo para evitar errores
+# Definir la ruta absoluta del modelo
 ruta_modelo = os.path.abspath("modelo/da_cerebelum_model-epoch=20-val_loss=0.27.ckpt")
 
-# Cargar el modelo desde la ruta absoluta
+# Verificar si el archivo realmente existe antes de cargarlo
+if not os.path.exists(ruta_modelo):
+    raise FileNotFoundError(f"No se encontró el archivo del modelo en {ruta_modelo}")
+
 checkpoint = torch.load(ruta_modelo, map_location=torch.device("cpu"))
 
 class CerebellumModelSegmentation(pl.LightningModule):
