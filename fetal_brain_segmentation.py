@@ -21,13 +21,14 @@ import requests
 import os
 import torch
 
+# Crear la carpeta si no existe
 os.makedirs("modelo", exist_ok=True)
 
 # URL del modelo en Google Drive (ID obtenido del enlace)
 url = "https://drive.google.com/uc?id=1YC5V2r-zGBH0VvvuDCH5nnWFEy2hwUEP"
-modelo_path = "modelo/da_cerebelum_model-epoch=20-val_loss=0.27.ckpt"
+modelo_path = "modelo/modelo.ckpt"
 
-# Descargar el modelo si no existe
+# Descargar el modelo si no existe o si la descarga anterior fue corrupta
 if not os.path.exists(modelo_path) or os.path.getsize(modelo_path) < 100000:
     print("Descargando modelo desde Google Drive...")
     response = requests.get(url, stream=True)
@@ -40,8 +41,12 @@ if not os.path.exists(modelo_path) or os.path.getsize(modelo_path) < 100000:
 if not os.path.exists(modelo_path) or os.path.getsize(modelo_path) < 100000:
     raise FileNotFoundError(f"El archivo descargado parece estar corrupto o incompleto: {modelo_path}")
 
-# Cargar el modelo en PyTorch con codificación adecuada
-checkpoint = torch.load(modelo_path, map_location=torch.device("cpu"), encoding="latin1")
+# Cargar el modelo en PyTorch sin errores de serialización
+try:
+    checkpoint = torch.load(modelo_path, map_location=torch.device("cpu"))
+except Exception as e:
+    print("Error al cargar el archivo `.ckpt`, convirtiéndolo a `.pth`...")
+    checkpoint = torch.load(modelo_path, map_location=torch.device("cpu"), encoding="latin1")
 
 # Guardar el modelo en un formato más seguro (`.pth`)
 modelo_pth = "modelo/modelo.pth"
@@ -51,6 +56,7 @@ print("Modelo convertido y guardado en formato .pth correctamente.")
 # Ahora, cargar el modelo `.pth`
 checkpoint = torch.load(modelo_pth, map_location=torch.device("cpu"))
 print("Modelo `.pth` cargado correctamente en PyTorch.")
+
 
 
 class CerebellumModelSegmentation(pl.LightningModule):
