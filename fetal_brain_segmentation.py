@@ -17,45 +17,32 @@ import tempfile
 import re
 import pandas as pd
 import threading
-import requests
 import os
+import gdown
 import torch
 
-# Crear la carpeta si no existe
+# Crear carpeta
 os.makedirs("modelo", exist_ok=True)
 
-# URL del modelo en Google Drive (ID obtenido del enlace)
-url = "https://drive.google.com/uc?id=1YC5V2r-zGBH0VvvuDCH5nnWFEy2hwUEP"
+# ID del archivo de Google Drive
+file_id = "1YC5V2r-zGBH0VvvuDCH5nnWFEy2hwUEP"
 modelo_path = "modelo/modelo.ckpt"
 
-# Descargar el modelo si no existe o si la descarga anterior fue corrupta
+# Descargar si no existe
 if not os.path.exists(modelo_path) or os.path.getsize(modelo_path) < 100000:
-    print("Descargando modelo desde Google Drive...")
-    response = requests.get(url, stream=True)
-    with open(modelo_path, "wb") as f:
-        for chunk in response.iter_content(chunk_size=8192):
-            f.write(chunk)
-    print("Modelo descargado exitosamente.")
+    print("Descargando modelo con gdown...")
+    gdown.download(id=file_id, output=modelo_path, quiet=False)
 
-# Verificar que el archivo se descargó correctamente
+# Verificar tamaño del archivo
 if not os.path.exists(modelo_path) or os.path.getsize(modelo_path) < 100000:
-    raise FileNotFoundError(f"El archivo descargado parece estar corrupto o incompleto: {modelo_path}")
+    raise FileNotFoundError("Descarga corrupta o incompleta")
 
-# Cargar el modelo en PyTorch sin errores de serialización
+# Cargar el modelo
 try:
-    checkpoint = torch.load(modelo_path, map_location=torch.device("cpu"))
+    checkpoint = torch.load(modelo_path, map_location="cpu")
+    print("Modelo `.ckpt` cargado correctamente.")
 except Exception as e:
-    print("Error al cargar el archivo `.ckpt`, convirtiéndolo a `.pth`...")
-    checkpoint = torch.load(modelo_path, map_location=torch.device("cpu"), encoding="latin1")
-
-# Guardar el modelo en un formato más seguro (`.pth`)
-modelo_pth = "modelo/modelo.pth"
-torch.save(checkpoint, modelo_pth)
-print("Modelo convertido y guardado en formato .pth correctamente.")
-
-# Ahora, cargar el modelo `.pth`
-checkpoint = torch.load(modelo_pth, map_location=torch.device("cpu"))
-print("Modelo `.pth` cargado correctamente en PyTorch.")
+    print("Error al cargar el `.ckpt`: ", e)
 
 
 
@@ -182,15 +169,21 @@ def predict_mask(image_pil, model):
     return padded_image, mask_image
 
 def load_model():
-    arch = "Unetplusplus"
+    arch = "UnetPlusPlus"
     encoder_name = "resnext50_32x4d"
     in_channels = 3
     out_classes = 4
 
-    model = CerebellumModelSegmentation(arch, encoder_name, in_channels, out_classes)
+    modelo_path = "modelo/da_cerebelum_model-epoch=20-val_loss=0.27.ckpt"
 
-    checkpoint = torch.load("modelo/da_cerebelum_model-epoch=20-val_loss=0.27.ckpt", map_location=torch.device("cpu"))
-    model.load_state_dict(checkpoint["state_dict"], strict=False)
+    model = CerebellumModelSegmentation.load_from_checkpoint(
+        modelo_path,
+        arch=arch,
+        encoder_name=encoder_name,
+        in_channels=in_channels,
+        out_classes=out_classes,
+        map_location=torch.device("cpu")
+    )
 
     model.eval()
     return model
