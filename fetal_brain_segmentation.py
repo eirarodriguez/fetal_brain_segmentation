@@ -20,6 +20,14 @@ import threading
 import os
 import gdown
 
+import os
+
+modelo_path = "modelo/da_cerebelum_model-epoch=20-val_loss=0.27.ckpt"
+tamaño = os.path.getsize(modelo_path)
+
+print(f"Tamaño del archivo: {tamaño / 1024:.2f} KB")
+
+
 def descargar_modelo():
     os.makedirs("modelo", exist_ok=True)
     modelo_path = "modelo/da_cerebelum_model-epoch=20-val_loss=0.27.ckpt"
