@@ -18,6 +18,13 @@ import re
 import pandas as pd
 import threading
 
+os.system("git lfs pull")
+
+# Definir la ruta absoluta del modelo para evitar errores
+ruta_modelo = os.path.abspath("modelo/da_cerebelum_model-epoch=20-val_loss=0.27.ckpt")
+
+# Cargar el modelo desde la ruta absoluta
+checkpoint = torch.load(ruta_modelo, map_location=torch.device("cpu"))
 
 class CerebellumModelSegmentation(pl.LightningModule):
     def __init__(self, arch, encoder_name, in_channels, out_classes):
