@@ -18,23 +18,30 @@ import re
 import pandas as pd
 import threading
 import requests
+import os
+import torch
 
-def descargar_modelo():
-    url = "https://drive.google.com/uc?id=1YC5V2r-zGBH0VvvuDCH5nnWFEy2hwUEP"
-    nombre_archivo = "modelo.ckpt"
+# URL de descarga directa de Google Drive
+url = "https://drive.google.com/uc?id=1YC5V2r-zGBH0VvvuDCH5nnWFEy2hwUEP"
+modelo_path = "modelo/da_cerebelum_model-epoch=20-val_loss=0.27.ckpt"
 
+# Descargar el modelo si no existe
+if not os.path.exists(modelo_path) or os.path.getsize(modelo_path) < 100000:  # Verifica que el tamaño sea correcto
     print("Descargando modelo desde Google Drive...")
     response = requests.get(url, stream=True)
-    with open(nombre_archivo, "wb") as f:
+    with open(modelo_path, "wb") as f:
         for chunk in response.iter_content(chunk_size=8192):
             f.write(chunk)
-
     print("Modelo descargado exitosamente.")
-    return nombre_archivo
 
-# Descargar el modelo antes de cargarlo con PyTorch
-modelo_path = descargar_modelo()
+# Verificar si el archivo realmente se descargó correctamente
+if not os.path.exists(modelo_path) or os.path.getsize(modelo_path) < 100000:
+    raise FileNotFoundError(f"El archivo descargado parece estar corrupto o incompleto: {modelo_path}")
+
+# Cargar el modelo en PyTorch
 checkpoint = torch.load(modelo_path, map_location=torch.device("cpu"))
+print("Modelo cargado correctamente en PyTorch.")
+
 
 
 class CerebellumModelSegmentation(pl.LightningModule):
