@@ -24,11 +24,13 @@ def descargar_modelo():
     os.makedirs("modelo", exist_ok=True)
     modelo_path = "modelo/da_cerebelum_model-epoch=20-val_loss=0.27.ckpt"
 
+    # Si el modelo no está descargado o está corrupto, lo descargamos
     if not os.path.exists(modelo_path):
         print("Descargando modelo desde Google Drive con gdown...")
-        url = "https://drive.google.com/file/d/1YC5V2r-zGBH0VvvuDCH5nnWFEy2hwUEP/view?usp=drive_link"
+        url = "https://drive.google.com/uc?id=1YC5V2r-zGBH0VvvuDCH5nnWFEy2hwUEP"
         gdown.download(url, modelo_path, quiet=False)
 
+    # Verificamos que el archivo esté correctamente descargado
     if not os.path.exists(modelo_path) or os.path.getsize(modelo_path) < 100000:
         raise FileNotFoundError("El modelo no se descargó correctamente o está corrupto.")
 
@@ -158,16 +160,21 @@ def predict_mask(image_pil, model):
     return padded_image, mask_image
 
 def load_model():
-    modelo_path = descargar_modelo()  # Asegura que está descargado correctamente
+    modelo_path = descargar_modelo()  # Asegura que el modelo esté descargado correctamente
 
-    arch = "Unetplusplus"
+    # Configuración del modelo
+    arch = "Unetplusplus"  # Puedes ajustar según tu arquitectura
     encoder_name = "resnext50_32x4d"
-    in_channels = 3
-    out_classes = 4
+    in_channels = 3  # Dependiendo de los canales de entrada de tus imágenes
+    out_classes = 4  # Ajusta esto a las clases que usas en la segmentación
 
+    # Instancia el modelo
     model = CerebellumModelSegmentation(arch, encoder_name, in_channels, out_classes)
 
+    # Carga el checkpoint
     checkpoint = torch.load(modelo_path, map_location=torch.device("cpu"))
+    
+    # Aquí, 'checkpoint["state_dict"]' es el diccionario con los pesos, verifica que este nombre sea correcto
     model.load_state_dict(checkpoint["state_dict"], strict=False)
 
     model.eval()
