@@ -19,31 +19,20 @@ import pandas as pd
 import threading
 import os
 import gdown
-import torch
 
-# Crear carpeta
-os.makedirs("modelo", exist_ok=True)
+def descargar_modelo():
+    os.makedirs("modelo", exist_ok=True)
+    modelo_path = "modelo/da_cerebelum_model-epoch=20-val_loss=0.27.ckpt"
 
-# ID del archivo de Google Drive
-file_id = "1YC5V2r-zGBH0VvvuDCH5nnWFEy2hwUEP"
-modelo_path = "modelo/modelo.ckpt"
+    if not os.path.exists(modelo_path):
+        print("Descargando modelo desde Google Drive con gdown...")
+        url = "https://drive.google.com/uc?id=1YC5V2r-zGBH0VvvuDCH5nnWFEy2hwUEP"
+        gdown.download(url, modelo_path, quiet=False)
 
-# Descargar si no existe
-if not os.path.exists(modelo_path) or os.path.getsize(modelo_path) < 100000:
-    print("Descargando modelo con gdown...")
-    gdown.download(id=file_id, output=modelo_path, quiet=False)
+    if not os.path.exists(modelo_path) or os.path.getsize(modelo_path) < 100000:
+        raise FileNotFoundError("El modelo no se descargó correctamente o está corrupto.")
 
-# Verificar tamaño del archivo
-if not os.path.exists(modelo_path) or os.path.getsize(modelo_path) < 100000:
-    raise FileNotFoundError("Descarga corrupta o incompleta")
-
-# Cargar el modelo
-try:
-    checkpoint = torch.load(modelo_path, map_location="cpu")
-    print("Modelo `.ckpt` cargado correctamente.")
-except Exception as e:
-    print("Error al cargar el `.ckpt`: ", e)
-
+    return modelo_path
 
 
 
@@ -169,24 +158,21 @@ def predict_mask(image_pil, model):
     return padded_image, mask_image
 
 def load_model():
-    arch = "UnetPlusPlus"
+    modelo_path = descargar_modelo()  # Asegura que está descargado correctamente
+
+    arch = "Unetplusplus"
     encoder_name = "resnext50_32x4d"
     in_channels = 3
     out_classes = 4
 
-    modelo_path = "modelo/da_cerebelum_model-epoch=20-val_loss=0.27.ckpt"
+    model = CerebellumModelSegmentation(arch, encoder_name, in_channels, out_classes)
 
-    model = CerebellumModelSegmentation.load_from_checkpoint(
-        modelo_path,
-        arch=arch,
-        encoder_name=encoder_name,
-        in_channels=in_channels,
-        out_classes=out_classes,
-        map_location=torch.device("cpu")
-    )
+    checkpoint = torch.load(modelo_path, map_location=torch.device("cpu"))
+    model.load_state_dict(checkpoint["state_dict"], strict=False)
 
     model.eval()
     return model
+
 
 
 def generate_pdf(patient_name, record_number, segmented_img, original_img, groundtruth_img=None, week=None,
