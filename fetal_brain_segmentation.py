@@ -17,20 +17,25 @@ import tempfile
 import re
 import pandas as pd
 import threading
+import requests
 
-try:
-    os.system("git lfs pull")
-except Exception as e:
-    print("Error al ejecutar git lfs pull:", e)
+def descargar_modelo():
+    url = "https://drive.google.com/uc?id=1YC5V2r-zGBH0VvvuDCH5nnWFEy2hwUEP"
+    nombre_archivo = "modelo.ckpt"
 
-# Definir la ruta absoluta del modelo
-ruta_modelo = os.path.abspath("modelo/da_cerebelum_model-epoch=20-val_loss=0.27.ckpt")
+    print("Descargando modelo desde Google Drive...")
+    response = requests.get(url, stream=True)
+    with open(nombre_archivo, "wb") as f:
+        for chunk in response.iter_content(chunk_size=8192):
+            f.write(chunk)
 
-# Verificar si el archivo realmente existe antes de cargarlo
-if not os.path.exists(ruta_modelo):
-    raise FileNotFoundError(f"No se encontró el archivo del modelo en {ruta_modelo}")
+    print("Modelo descargado exitosamente.")
+    return nombre_archivo
 
-checkpoint = torch.load(ruta_modelo, map_location=torch.device("cpu"))
+# Descargar el modelo antes de cargarlo con PyTorch
+modelo_path = descargar_modelo()
+checkpoint = torch.load(modelo_path, map_location=torch.device("cpu"))
+
 
 class CerebellumModelSegmentation(pl.LightningModule):
     def __init__(self, arch, encoder_name, in_channels, out_classes):
