@@ -59,6 +59,7 @@ print("Modelo `.pth` cargado correctamente en PyTorch.")
 
 
 
+
 class CerebellumModelSegmentation(pl.LightningModule):
     def __init__(self, arch, encoder_name, in_channels, out_classes):
         super().__init__()
