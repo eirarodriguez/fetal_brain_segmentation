@@ -17,32 +17,35 @@ import tempfile
 import re
 import pandas as pd
 import threading
+from huggingface_hub import hf_hub_download
 import os
-import gdown
-
-import os
-
-modelo_path = "modelo/da_cerebelum_model-epoch=20-val_loss=0.27.ckpt"
-tamaño = os.path.getsize(modelo_path)
-
-print(f"Tamaño del archivo: {tamaño / 1024:.2f} KB")
-
 
 def descargar_modelo():
+    # Ruta donde se almacenará el modelo descargado
     os.makedirs("modelo", exist_ok=True)
-    modelo_path = "modelo/da_cerebelum_model-epoch=20-val_loss=0.27.ckpt"
+    modelo_path = hf_hub_download(
+        repo_id="eirarodriguez/segmentation_checkpoint",  # El ID del repositorio que creaste
+        filename="da_cerebelum_model-epoch=20-val_loss=0.27.ckpt",  # El nombre del archivo
+    )
 
-    # Si el modelo no está descargado o está corrupto, lo descargamos
+    # Verificar que el archivo ha sido descargado
     if not os.path.exists(modelo_path):
-        print("Descargando modelo desde Google Drive con gdown...")
-        url = "https://drive.google.com/uc?id=1YC5V2r-zGBH0VvvuDCH5nnWFEy2hwUEP"
-        gdown.download(url, modelo_path, quiet=False)
+        raise FileNotFoundError("El modelo no se descargó desde Hugging Face.")
 
-    # Verificamos que el archivo esté correctamente descargado
-    if not os.path.exists(modelo_path) or os.path.getsize(modelo_path) < 100000:
-        raise FileNotFoundError("El modelo no se descargó correctamente o está corrupto.")
+    size = os.path.getsize(modelo_path)
+    print(f"Tamaño del modelo descargado: {size / 1024:.2f} KB")
+
+    if size < 100_000:  # Si es menor a 100 KB, probablemente sea una página de error HTML
+        with open(modelo_path, "r", encoding="utf-8", errors="ignore") as f:
+            print("\nContenido del archivo descargado (primeras líneas):")
+            for _ in range(10):
+                print(f.readline())
+        raise ValueError("El archivo descargado no es un checkpoint válido. Es probable que sea una página de error HTML.")
 
     return modelo_path
+
+modelo_descargado = descargar_modelo()
+print(f"Modelo descargado en: {modelo_descargado}")
 
 
 
@@ -167,26 +170,37 @@ def predict_mask(image_pil, model):
     mask_image = Image.fromarray(color_mask)
     return padded_image, mask_image
 
-def load_model():
-    modelo_path = descargar_modelo()  # Asegura que el modelo esté descargado correctamente
+def cargar_modelo():
+    modelo_path = descargar_modelo()
 
-    # Configuración del modelo
-    arch = "Unetplusplus"  # Puedes ajustar según tu arquitectura
-    encoder_name = "resnext50_32x4d"
-    in_channels = 3  # Dependiendo de los canales de entrada de tus imágenes
-    out_classes = 4  # Ajusta esto a las clases que usas en la segmentación
+    print(f"Intentando cargar el modelo desde: {modelo_path}")
 
-    # Instancia el modelo
-    model = CerebellumModelSegmentation(arch, encoder_name, in_channels, out_classes)
+    # Verifica si el archivo existe
+    if not os.path.exists(modelo_path):
+        raise FileNotFoundError(f"El archivo del modelo no se encuentra en la ruta: {modelo_path}")
 
     # Carga el checkpoint
-    checkpoint = torch.load(modelo_path, map_location=torch.device("cpu"))
-    
-    # Aquí, 'checkpoint["state_dict"]' es el diccionario con los pesos, verifica que este nombre sea correcto
-    model.load_state_dict(checkpoint["state_dict"], strict=False)
+    try:
+        checkpoint = torch.load(modelo_path, map_location=torch.device("cpu"))
+        print(f"Checkpoint cargado correctamente: {checkpoint.keys()}")  # Muestra las claves del checkpoint
 
-    model.eval()
+    except Exception as e:
+        print(f"Error al cargar el checkpoint: {e}")
+        raise
+
+    # Carga del modelo (ajustando a tu tipo de modelo)
+    model = CerebellumModelSegmentation(arch="Unetplusplus", encoder_name="resnext50_32x4d", in_channels=3, out_classes=4)
+
+    try:
+        model.load_state_dict(checkpoint["state_dict"], strict=False)
+    except Exception as e:
+        print(f"Error al cargar el state_dict: {e}")
+        raise
+
+    model.eval()  # Cambia a modo de evaluación
     return model
+
+# Llamada a la función para cargar el modelo
 
 
 
@@ -361,7 +375,7 @@ def run_prediction(input_image, model, result_dict):
 
 
 
-model = load_model()
+model = cargar_modelo
 
 
 st.set_page_config(page_title="Fetal Brain Segmentation", layout="wide")
