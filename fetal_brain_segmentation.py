@@ -26,7 +26,7 @@ def descargar_modelo():
 
     if not os.path.exists(modelo_path):
         print("Descargando modelo desde Google Drive con gdown...")
-        url = "https://drive.google.com/uc?id=1YC5V2r-zGBH0VvvuDCH5nnWFEy2hwUEP"
+        url = "https://drive.google.com/file/d/1YC5V2r-zGBH0VvvuDCH5nnWFEy2hwUEP/view?usp=drive_link"
         gdown.download(url, modelo_path, quiet=False)
 
     if not os.path.exists(modelo_path) or os.path.getsize(modelo_path) < 100000:
