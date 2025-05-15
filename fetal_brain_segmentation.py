@@ -20,6 +20,9 @@ import threading
 from huggingface_hub import hf_hub_download
 import os
 
+os.environ["STREAMLIT_DISABLE_WATCHDOG_WARNINGS"] = "true"
+
+
 def descargar_modelo():
     # Ruta donde se almacenará el modelo descargado
     os.makedirs("modelo", exist_ok=True)
