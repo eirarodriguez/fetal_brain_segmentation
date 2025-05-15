@@ -377,10 +377,13 @@ def calculate_metrics(true_mask, pred_mask, num_classes=3):
 
     return table_data
 
-def run_prediction(input_image, model, result_dict):
+def run_prediction(input_image, model):
     resized_image, mask_image = predict_mask(input_image, model)
-    result_dict["resized"] = resized_image
-    result_dict["mask"] = mask_image
+    return {
+        "resized": resized_image,
+        "mask": mask_image
+    }
+
 
 
 
