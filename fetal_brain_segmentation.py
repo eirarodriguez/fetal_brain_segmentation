@@ -175,21 +175,23 @@ def cargar_modelo():
 
     print(f"Intentando cargar el modelo desde: {modelo_path}")
 
-    # Verifica si el archivo existe
     if not os.path.exists(modelo_path):
         raise FileNotFoundError(f"El archivo del modelo no se encuentra en la ruta: {modelo_path}")
 
-    # Carga el checkpoint
     try:
         checkpoint = torch.load(modelo_path, map_location=torch.device("cpu"))
-        print(f"Checkpoint cargado correctamente: {checkpoint.keys()}")  # Muestra las claves del checkpoint
+        print(f"Checkpoint cargado correctamente: {checkpoint.keys()}")
 
     except Exception as e:
         print(f"Error al cargar el checkpoint: {e}")
         raise
 
-    # Carga del modelo (ajustando a tu tipo de modelo)
-    model = CerebellumModelSegmentation(arch="Unetplusplus", encoder_name="resnext50_32x4d", in_channels=3, out_classes=4)
+    model = CerebellumModelSegmentation(
+        arch="Unetplusplus",
+        encoder_name="resnext50_32x4d",
+        in_channels=3,
+        out_classes=4
+    )
 
     try:
         model.load_state_dict(checkpoint["state_dict"], strict=False)
@@ -197,10 +199,14 @@ def cargar_modelo():
         print(f"Error al cargar el state_dict: {e}")
         raise
 
-    model.eval()  # Cambia a modo de evaluación
+    # Añadir atributos de normalización
+    model.mean = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
+    model.std = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
+
+    model.eval()
     return model
 
-# Llamada a la función para cargar el modelo
+
 
 
 
@@ -432,14 +438,6 @@ if uploaded_file is not None:
     progress_text.empty()
     preview_container.empty()
 
-    # 👇 Añade esto justo antes de acceder a result["resized"]
-    st.write("🔍 DEBUG - result keys:", list(result.keys()))
-    st.write("🔍 DEBUG - result completo:", result)
-
-    # Verifica si contiene la clave "resized"
-    if "resized" not in result:
-        st.error("❌ Error: no se encontró la imagen redimensionada (clave 'resized').")
-        st.stop()
 
     # Recuperar el resultado
     resized_image = result["resized"]
