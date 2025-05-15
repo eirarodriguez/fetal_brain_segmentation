@@ -410,38 +410,12 @@ uploaded_file = st.file_uploader("Sube una imagen de ecografía fetal (JPG o PNG
 
 if uploaded_file is not None:
     input_image = Image.open(uploaded_file).convert("RGB")
-    
-    result = {}
-    
-    preview_container = st.empty()
-    preview_base64 = image_to_base64(input_image)
-    preview_container.markdown(f"""
-        <div style="display: flex; justify-content: center; margin-bottom: 10px;">
-            <img src="data:image/png;base64,{preview_base64}" style="max-height: 400px; border: 1px solid #ccc; border-radius: 8px;" />
-        </div>
-    """, unsafe_allow_html=True)
 
-    thread = threading.Thread(target=run_prediction, args=(input_image, model, result))
-    thread.start()
+    st.markdown("Procesando imagen...")
 
-    # Mostrar barra de progreso durante 30 segundos
-    progress_bar = st.progress(0)
-    progress_text = st.empty()
-    progress_text.text("Procesando...")
+    # Ejecutar predicción directamente, sin threading
+    result = run_prediction(input_image, model)
 
-    for i in range(31):  # 0 a 30
-        time.sleep(1)
-        progress_bar.progress(i * 100 // 30)
-
-    # Esperar a que la predicción termine
-    thread.join()
-
-    # Ocultar barra y texto
-    progress_bar.empty()
-    progress_text.empty()
-    preview_container.empty()
-
-    # Recuperar el resultado
     resized_image = result["resized"]
     mask_image = result["mask"]
 
@@ -561,10 +535,7 @@ if uploaded_file is not None:
         if not patient_name or not record_number:
             st.error("Por favor, completa todos los campos antes de descargar el informe.")
         else:
-            pdf_result = {}
-
-            # Función para generar el PDF y guardarlo en el diccionario
-            def generate_pdf_thread():
+            with st.spinner("Generando informe PDF..."):
                 pdf_buffer = generate_pdf(
                     patient_name=patient_name,
                     record_number=record_number,
@@ -574,34 +545,10 @@ if uploaded_file is not None:
                     logo_sacyl_path="logo_sacyl.png",
                     logo_junta_path="logo_junta.png"
                 )
-                pdf_result["buffer"] = pdf_buffer
-
-            # Lanzar hilo
-            pdf_thread = threading.Thread(target=generate_pdf_thread)
-            pdf_thread.start()
-
-            # Barra de progreso durante 40 segundos
-            progress_bar = st.progress(0)
-            progress_text = st.empty()
-            progress_text.text("Generando informe PDF...")
-
-            for i in range(41):
-                time.sleep(1)
-                progress_bar.progress(i * 100 // 40)
-
-            # Esperar a que el hilo termine si aún no lo ha hecho
-            pdf_thread.join()
-
-            # Ocultar barra
-            progress_bar.empty()
-            progress_text.empty()
-
             st.success("Informe generado con éxito. Haz clic en el botón para descargar.")
-            # Mostrar botón de descarga cuando esté listo
             st.download_button(
                 label="Descargar informe PDF",
-                data=pdf_result["buffer"],
+                data=pdf_buffer,
                 file_name=f"{record_number}_{datetime.now().strftime('%Y%m%d')}.pdf",
                 mime="application/pdf"
             )
-            
