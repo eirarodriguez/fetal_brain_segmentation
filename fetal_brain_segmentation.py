@@ -561,26 +561,28 @@ if uploaded_file is not None:
         if not patient_name or not record_number:
             st.error("Por favor, completa todos los campos antes de descargar el informe.")
         else:
-            pdf_result = {}
+            pdf_result = {"buffer": None, "error": None}
 
-            # Función para generar el PDF (se ejecutará en segundo plano)
             def generate_pdf_thread():
-                pdf_buffer = generate_pdf(
-                    patient_name=patient_name,
-                    record_number=record_number,
-                    segmented_img=mask_image,
-                    week=week,
-                    original_img=input_image,
-                    logo_sacyl_path="logo_sacyl.png",
-                    logo_junta_path="logo_junta.png"
-                )
-                pdf_result["buffer"] = pdf_buffer
+                try:
+                    pdf_buffer = generate_pdf(
+                        patient_name=patient_name,
+                        record_number=record_number,
+                        segmented_img=mask_image,
+                        week=week,
+                        original_img=input_image,
+                        logo_sacyl_path="logo_sacyl.png",
+                        logo_junta_path="logo_junta.png"
+                    )
+                    pdf_result["buffer"] = pdf_buffer
+                except Exception as e:
+                    pdf_result["error"] = str(e)
 
             # Iniciar hilo
             thread = threading.Thread(target=generate_pdf_thread)
             thread.start()
 
-            # Barra de progreso dinámica mientras se genera el PDF
+            # Mostrar barra mientras se genera el PDF
             progress_bar = st.progress(0)
             progress_text = st.empty()
             progress_text.text("Generando informe PDF...")
@@ -591,18 +593,19 @@ if uploaded_file is not None:
                 i = min(i + 1, 40)
                 progress_bar.progress(i * 100 // 40)
 
-            # Asegurarse de que el hilo ha terminado
             thread.join()
-
-            # Ocultar barra
             progress_bar.empty()
             progress_text.empty()
 
-            # Mostrar mensaje y botón de descarga
-            st.success("Informe generado con éxito. Haz clic en el botón para descargar.")
-            st.download_button(
-                label="Descargar informe PDF",
-                data=pdf_result["buffer"],
-                file_name=f"{record_number}_{datetime.now().strftime('%Y%m%d')}.pdf",
-                mime="application/pdf"
-            )
+            if pdf_result["error"]:
+                st.error(f"❌ Error al generar el informe PDF: {pdf_result['error']}")
+            elif pdf_result["buffer"] is None:
+                st.error("❌ Error desconocido al generar el PDF.")
+            else:
+                st.success("✅ Informe generado con éxito. Haz clic en el botón para descargar.")
+                st.download_button(
+                    label="Descargar informe PDF",
+                    data=pdf_result["buffer"],
+                    file_name=f"{record_number}_{datetime.now().strftime('%Y%m%d')}.pdf",
+                    mime="application/pdf"
+                )
