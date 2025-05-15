@@ -375,7 +375,7 @@ def run_prediction(input_image, model, result_dict):
 
 
 
-model = cargar_modelo
+model = cargar_modelo()
 
 
 st.set_page_config(page_title="Fetal Brain Segmentation", layout="wide")
@@ -431,6 +431,15 @@ if uploaded_file is not None:
     progress_bar.empty()
     progress_text.empty()
     preview_container.empty()
+
+    # 👇 Añade esto justo antes de acceder a result["resized"]
+    st.write("🔍 DEBUG - result keys:", list(result.keys()))
+    st.write("🔍 DEBUG - result completo:", result)
+
+    # Verifica si contiene la clave "resized"
+    if "resized" not in result:
+        st.error("❌ Error: no se encontró la imagen redimensionada (clave 'resized').")
+        st.stop()
 
     # Recuperar el resultado
     resized_image = result["resized"]
