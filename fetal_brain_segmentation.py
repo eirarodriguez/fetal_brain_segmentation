@@ -20,26 +20,7 @@ import threading
 from huggingface_hub import hf_hub_download
 import os
 
-os.environ["STREAMLIT_DISABLE_WATCHDOG_WARNINGS"] = "true"
-
-st.write("📁 Current working directory:", os.getcwd())
-st.write("📄 Files in current directory:", os.listdir())
-
-# Verifica si los logos existen
-st.write("🔍 ¿Existe 'logo_sacyl.png'? ➤", os.path.exists("logo_sacyl.png"))
-st.write("🔍 ¿Existe 'logo_junta.png'? ➤", os.path.exists("logo_junta.png"))
-
-# Si están, los mostramos
-if os.path.exists("logo_sacyl.png"):
-    st.image("logo_sacyl.png", caption="Logo Sacyl encontrado")
-else:
-    st.warning("Logo Sacyl NO encontrado")
-
-if os.path.exists("logo_junta.png"):
-    st.image("logo_junta.png", caption="Logo Junta encontrado")
-else:
-    st.warning("Logo Junta NO encontrado")
-
+st.set_page_config(page_title="Fetal Brain Segmentation", layout="wide")
 
 def descargar_modelo():
     # Ruta donde se almacenará el modelo descargado
@@ -408,7 +389,7 @@ def run_prediction(input_image, model):
 model = cargar_modelo()
 
 
-st.set_page_config(page_title="Fetal Brain Segmentation", layout="wide")
+
 
 
 st.markdown("""
