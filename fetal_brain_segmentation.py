@@ -561,17 +561,10 @@ if uploaded_file is not None:
         if not patient_name or not record_number:
             st.error("Por favor, completa todos los campos antes de descargar el informe.")
         else:
-            st.info("Generando informe PDF...")
+            pdf_result = {}
 
-            # Inicializa el progreso
-            progress_bar = st.progress(0)
-            progress_text = st.empty()
-
-            start_time = time.time()
-
-            # Comienza el procesamiento pesado (generación del PDF)
-            with st.spinner("Procesando imagen y generando informe..."):
-                # Lógica de generación del PDF
+            # Función para generar el PDF (se ejecutará en segundo plano)
+            def generate_pdf_thread():
                 pdf_buffer = generate_pdf(
                     patient_name=patient_name,
                     record_number=record_number,
@@ -581,30 +574,35 @@ if uploaded_file is not None:
                     logo_sacyl_path="logo_sacyl.png",
                     logo_junta_path="logo_junta.png"
                 )
+                pdf_result["buffer"] = pdf_buffer
 
-            end_time = time.time()
-            duration = end_time - start_time
+            # Iniciar hilo
+            thread = threading.Thread(target=generate_pdf_thread)
+            thread.start()
 
-            # Si la generación ha sido más rápida de 40s, completamos la barra poco a poco
-            total_duration = 40  # segundos
-            remaining = total_duration - duration
+            # Barra de progreso dinámica mientras se genera el PDF
+            progress_bar = st.progress(0)
+            progress_text = st.empty()
+            progress_text.text("Generando informe PDF...")
 
-            if remaining > 0:
-                steps = 20
-                for i in range(steps):
-                    time.sleep(remaining / steps)
-                    progress_bar.progress(int(((duration + (i+1)*(remaining/steps)) / total_duration) * 100))
-            else:
-                progress_bar.progress(100)
+            i = 0
+            while thread.is_alive():
+                time.sleep(1)
+                i = min(i + 1, 40)
+                progress_bar.progress(i * 100 // 40)
 
-            # Ocultar barra y mostrar mensaje final
+            # Asegurarse de que el hilo ha terminado
+            thread.join()
+
+            # Ocultar barra
             progress_bar.empty()
             progress_text.empty()
 
+            # Mostrar mensaje y botón de descarga
             st.success("Informe generado con éxito. Haz clic en el botón para descargar.")
             st.download_button(
                 label="Descargar informe PDF",
-                data=pdf_buffer,
+                data=pdf_result["buffer"],
                 file_name=f"{record_number}_{datetime.now().strftime('%Y%m%d')}.pdf",
                 mime="application/pdf"
             )
