@@ -1,2 +1,1 @@
-modelo/cerebelum_model-epoch=25-val_loss=0.27.ckpt filter=lfs diff=lfs merge=lfs -text
 modelo/cerebelum_model_weights_unet.pth filter=lfs diff=lfs merge=lfs -text
