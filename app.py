@@ -17,38 +17,6 @@ import tempfile
 import re
 import pandas as pd
 import threading
-from huggingface_hub import hf_hub_download
-import os
-
-st.set_page_config(page_title="Fetal Brain Segmentation", layout="wide")
-
-def descargar_modelo():
-    # Ruta donde se almacenará el modelo descargado
-    os.makedirs("modelo", exist_ok=True)
-    modelo_path = hf_hub_download(
-        repo_id="eirarodriguez/segmentation_checkpoint",  # El ID del repositorio que creaste
-        filename="da_cerebelum_model-epoch=20-val_loss=0.27.ckpt",  # El nombre del archivo
-    )
-
-    # Verificar que el archivo ha sido descargado
-    if not os.path.exists(modelo_path):
-        raise FileNotFoundError("El modelo no se descargó desde Hugging Face.")
-
-    size = os.path.getsize(modelo_path)
-    print(f"Tamaño del modelo descargado: {size / 1024:.2f} KB")
-
-    if size < 100_000:  # Si es menor a 100 KB, probablemente sea una página de error HTML
-        with open(modelo_path, "r", encoding="utf-8", errors="ignore") as f:
-            print("\nContenido del archivo descargado (primeras líneas):")
-            for _ in range(10):
-                print(f.readline())
-        raise ValueError("El archivo descargado no es un checkpoint válido. Es probable que sea una página de error HTML.")
-
-    return modelo_path
-
-modelo_descargado = descargar_modelo()
-print(f"Modelo descargado en: {modelo_descargado}")
-
 
 
 class CerebellumModelSegmentation(pl.LightningModule):
@@ -172,23 +140,20 @@ def predict_mask(image_pil, model):
     mask_image = Image.fromarray(color_mask)
     return padded_image, mask_image
 
-def cargar_modelo():
-    arch = "Unet"
+
+def load_model():
+    arch = "unet"
     encoder_name = "resnext50_32x4d"
     in_channels = 3
     out_classes = 4
 
     model = CerebellumModelSegmentation(arch, encoder_name, in_channels, out_classes)
 
-    checkpoint = torch.load("modelo/cerebelum_model-epoch=25-val_loss=0.27.ckpt", map_location=torch.device("cpu"))
-    model.load_state_dict(checkpoint["state_dict"], strict=False)
+    checkpoint = torch.load("modelo/cerebelum_model_weights_unet.pth", map_location=torch.device("cpu"))
+    model.load_state_dict(checkpoint, strict=False)
 
     model.eval()
     return model
-
-
-
-
 
 
 def generate_pdf(patient_name, record_number, segmented_img, original_img, groundtruth_img=None, week=None,
@@ -355,20 +320,17 @@ def calculate_metrics(true_mask, pred_mask, num_classes=3):
 
     return table_data
 
-def run_prediction(input_image, model):
+def run_prediction(input_image, model, result_dict):
     resized_image, mask_image = predict_mask(input_image, model)
-    return {
-        "resized": resized_image,
-        "mask": mask_image
-    }
+    result_dict["resized"] = resized_image
+    result_dict["mask"] = mask_image
 
 
 
-
-model = cargar_modelo()
-
+model = load_model()
 
 
+st.set_page_config(page_title="Fetal Brain Segmentation", layout="wide")
 
 
 st.markdown("""
@@ -391,18 +353,43 @@ uploaded_file = st.file_uploader("Sube una imagen de ecografía fetal (JPG o PNG
 
 if uploaded_file is not None:
     input_image = Image.open(uploaded_file).convert("RGB")
+    
+    result = {}
+    
+    preview_container = st.empty()
+    preview_base64 = image_to_base64(input_image)
+    preview_container.markdown(f"""
+        <div style="display: flex; justify-content: center; margin-bottom: 10px;">
+            <img src="data:image/png;base64,{preview_base64}" style="max-height: 400px; border: 1px solid #ccc; border-radius: 8px;" />
+        </div>
+    """, unsafe_allow_html=True)
 
-    st.markdown("Procesando imagen...")
+    thread = threading.Thread(target=run_prediction, args=(input_image, model, result))
+    thread.start()
 
-    # Ejecutar predicción directamente, sin threading
-    result = run_prediction(input_image, model)
+    # Mostrar barra de progreso durante 30 segundos
+    progress_bar = st.progress(0)
+    progress_text = st.empty()
+    progress_text.text("Procesando...")
 
+    for i in range(31):  # 0 a 30
+        time.sleep(1)
+        progress_bar.progress(i * 100 // 30)
+
+    # Esperar a que la predicción termine
+    thread.join()
+
+    # Ocultar barra y texto
+    progress_bar.empty()
+    progress_text.empty()
+    preview_container.empty()
+
+    # Recuperar el resultado
     resized_image = result["resized"]
     mask_image = result["mask"]
 
-
         # Mostrar Ground Truth si está disponible
-    COCO_JSON_PATH = 'data/_annotations.coco.json'
+    COCO_JSON_PATH = 'data\\_annotations.coco.json'
     INPUT_IMAGES_DIR = 'data'
     CATEGORY_COLORS = {
         1: (255, 0, 0),    # Cerebelo
@@ -516,7 +503,10 @@ if uploaded_file is not None:
         if not patient_name or not record_number:
             st.error("Por favor, completa todos los campos antes de descargar el informe.")
         else:
-            with st.spinner("Generando informe PDF..."):
+            pdf_result = {}
+
+            # Función para generar el PDF y guardarlo en el diccionario
+            def generate_pdf_thread():
                 pdf_buffer = generate_pdf(
                     patient_name=patient_name,
                     record_number=record_number,
@@ -526,10 +516,34 @@ if uploaded_file is not None:
                     logo_sacyl_path="logo_sacyl.png",
                     logo_junta_path="logo_junta.png"
                 )
+                pdf_result["buffer"] = pdf_buffer
+
+            # Lanzar hilo
+            pdf_thread = threading.Thread(target=generate_pdf_thread)
+            pdf_thread.start()
+
+            # Barra de progreso durante 40 segundos
+            progress_bar = st.progress(0)
+            progress_text = st.empty()
+            progress_text.text("Generando informe PDF...")
+
+            for i in range(41):
+                time.sleep(1)
+                progress_bar.progress(i * 100 // 40)
+
+            # Esperar a que el hilo termine si aún no lo ha hecho
+            pdf_thread.join()
+
+            # Ocultar barra
+            progress_bar.empty()
+            progress_text.empty()
+
             st.success("Informe generado con éxito. Haz clic en el botón para descargar.")
+            # Mostrar botón de descarga cuando esté listo
             st.download_button(
                 label="Descargar informe PDF",
-                data=pdf_buffer,
+                data=pdf_result["buffer"],
                 file_name=f"{record_number}_{datetime.now().strftime('%Y%m%d')}.pdf",
                 mime="application/pdf"
             )
+            
