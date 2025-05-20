@@ -390,7 +390,7 @@ if uploaded_file is not None:
     mask_image = result["mask"]
 
         # Mostrar Ground Truth si está disponible
-    COCO_JSON_PATH = 'data\_annotations.coco.json'
+    COCO_JSON_PATH = 'data/_annotations.coco.json'
     INPUT_IMAGES_DIR = 'data'
     CATEGORY_COLORS = {
         1: (255, 0, 0),    # Cerebelo
