@@ -18,6 +18,7 @@ import re
 import pandas as pd
 import threading
 
+st.set_page_config(page_title="Fetal Brain Segmentation", layout="wide")
 
 class CerebellumModelSegmentation(pl.LightningModule):
     def __init__(self, arch, encoder_name, in_channels, out_classes):
@@ -330,7 +331,7 @@ def run_prediction(input_image, model, result_dict):
 model = load_model()
 
 
-st.set_page_config(page_title="Fetal Brain Segmentation", layout="wide")
+
 
 
 st.markdown("""
