@@ -140,7 +140,7 @@ def predict_mask(image_pil, model):
     mask_image = Image.fromarray(color_mask)
     return padded_image, mask_image
 
-
+@st.cache_resource
 def load_model():
     arch = "unet"
     encoder_name = "resnext50_32x4d"
