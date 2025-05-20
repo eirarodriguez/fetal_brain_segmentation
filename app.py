@@ -1,4 +1,4 @@
-import gradio as gr
+import streamlit as st
 import torch
 import numpy as np
 from torchvision import transforms
@@ -16,7 +16,11 @@ import time
 import tempfile
 import re
 import pandas as pd
+import threading
 from huggingface_hub import hf_hub_download
+import os
+
+st.set_page_config(page_title="Fetal Brain Segmentation", layout="wide")
 
 def descargar_modelo():
     # Ruta donde se almacenará el modelo descargado
@@ -45,6 +49,8 @@ def descargar_modelo():
 modelo_descargado = descargar_modelo()
 print(f"Modelo descargado en: {modelo_descargado}")
 
+
+
 class CerebellumModelSegmentation(pl.LightningModule):
     def __init__(self, arch, encoder_name, in_channels, out_classes):
         super().__init__()
@@ -63,6 +69,7 @@ class CerebellumModelSegmentation(pl.LightningModule):
 def normalize_filename(name):
     # Elimina puntos y guiones y convierte a minúsculas para comparación flexible.
     return re.sub(r"[-.]", "", name).lower()
+
 
 def generate_groundtruth_mask(uploaded_filename, coco_json_path, input_dir, category_colors):
     """
@@ -105,6 +112,7 @@ def generate_groundtruth_mask(uploaded_filename, coco_json_path, input_dir, cate
                              fill=category_colors[ann["category_id"]])
     return mask
 
+
 def image_to_base64(img):
     """
     Convierte una imagen en formato Base64.
@@ -112,6 +120,7 @@ def image_to_base64(img):
     buffered = io.BytesIO()
     img.save(buffered, format="PNG")
     return base64.b64encode(buffered.getvalue()).decode()
+
 
 def pad_image_to_multiple(image_pil, multiple=32):
     """
@@ -131,6 +140,7 @@ def pad_image_to_multiple(image_pil, multiple=32):
     )
     return padded_image
 
+
 def predict_mask(image_pil, model):
     """
     Genera una máscara segmentada a partir de una imagen PIL y un modelo.
@@ -149,10 +159,10 @@ def predict_mask(image_pil, model):
 
     # Mapear los valores de la máscara a colores
     color_map = {
-        0: (0, 0, 0),     # background: black
-        1: (255, 0, 0),   # cerebellum: red
-        2: (0, 255, 0),   # cisterna magna: green
-        3: (0, 0, 255),   # vermis: blue
+        0: (0, 0, 0),       # background: black
+        1: (255, 0, 0),     # cerebellum: red
+        2: (0, 255, 0),     # cisterna magna: green
+        3: (0, 0, 255),     # vermis: blue
     }
 
     color_mask = np.zeros((pred_mask.shape[0], pred_mask.shape[1], 3), dtype=np.uint8)
@@ -163,30 +173,23 @@ def predict_mask(image_pil, model):
     return padded_image, mask_image
 
 def cargar_modelo():
-    modelo_path = 'cerebelum_model-epoch=25-val_loss=0.27.ckpt'
+    arch = "Unet"
+    encoder_name = "resnext50_32x4d"
+    in_channels = 3
+    out_classes = 4
 
-    if not os.path.exists(modelo_path):
-        raise FileNotFoundError(f"El archivo del modelo no se encuentra en la ruta: {modelo_path}")
+    model = CerebellumModelSegmentation(arch, encoder_name, in_channels, out_classes)
 
-    # Crear el modelo con la arquitectura esperada
-    model = CerebellumModelSegmentation(
-        arch="unet",
-        encoder_name="resnext50_32x4d",
-        in_channels=3,
-        out_classes=4
-    )
-
-    # Cargar pesos del state_dict
-    try:
-        state_dict = torch.load(modelo_path, map_location=torch.device("cpu"))
-        model.load_state_dict(state_dict, strict=True)
-        print("Modelo cargado correctamente.")
-    except Exception as e:
-        print(f"Error al cargar el modelo: {e}")
-        raise
+    checkpoint = torch.load("modelo/cerebelum_model-epoch=25-val_loss=0.27.ckpt", map_location=torch.device("cpu"))
+    model.load_state_dict(checkpoint["state_dict"], strict=False)
 
     model.eval()
     return model
+
+
+
+
+
 
 def generate_pdf(patient_name, record_number, segmented_img, original_img, groundtruth_img=None, week=None,
                  logo_sacyl_path="logo_sacyl.png", logo_junta_path="logo_junta.png"):
@@ -218,8 +221,9 @@ def generate_pdf(patient_name, record_number, segmented_img, original_img, groun
     pdf.set_xy(left_margin, line_h_y + 1)
     pdf.set_font("Arial", "", 8)
     pdf.multi_cell(70, 4.5,
-                   "Hospital Universitario de Burgos.\nAvda. Islas Baleares, s/n 09006 -BURGOS-\nTfno:947256246 Fax:null",
-                   align="C")
+    "Hospital Universitario de Burgos.\nAvda. Islas Baleares, s/n 09006 -BURGOS-\nTfno:947256246 Fax:null",
+    align="C")
+
 
     # === DATOS DEL PACIENTE (parte derecha del recuadro) ===
     pdf.set_xy(line_v_x + 2, top_margin + 2)
@@ -260,6 +264,7 @@ def generate_pdf(patient_name, record_number, segmented_img, original_img, groun
         pdf.cell(0, 6, "IMAGEN SEGMENTADA", ln=1, align="C")
         pdf.image(path, x=(page_width - image_width) / 2, y=y_start, w=image_width, h=image_height)
 
+
     # === PIE DE PÁGINA ===
     footer_y = 297 - 15  # 1.5 cm del borde inferior
     pdf.set_line_width(0.3)
@@ -274,6 +279,7 @@ def generate_pdf(patient_name, record_number, segmented_img, original_img, groun
     pdf_buffer.seek(0)
     return pdf_buffer
 
+
 def convert_rgb_to_classes(rgb_mask):
     """
     Convierte una imagen RGB con colores específicos a una máscara de clases (entero por píxel).
@@ -283,7 +289,7 @@ def convert_rgb_to_classes(rgb_mask):
             (255, 0, 0): 1,   # Rojo → Cerebelo
             (0, 255, 0): 2,   # Verde → Cisterna Magna
             (0, 0, 255): 3,   # Azul → Vermis
-            (0, 0, 0): 0     # Negro → Fondo
+            (0, 0, 0): 0      # Negro → Fondo
         }
 
         class_mask = np.zeros((rgb_mask.shape[0], rgb_mask.shape[1]), dtype=np.uint8)
@@ -296,9 +302,10 @@ def convert_rgb_to_classes(rgb_mask):
     else:
         return rgb_mask  # Ya es máscara de clases
 
+
 def calculate_metrics(true_mask, pred_mask, num_classes=3):
     """
-    Calcula Precisión (%), Sensibilidad (%) e IoU (%) por clase.
+    Calcula Precisión (%), Sensibilidad (%) e IoU (%) por clase, eliminando TP, FP y FN.
     """
 
     # Convertir ambas a clases desde RGB si fuera necesario
@@ -355,54 +362,16 @@ def run_prediction(input_image, model):
         "mask": mask_image
     }
 
+
+
+
 model = cargar_modelo()
 
-def segment_and_report(image, patient_name, record_number, week):
-    if image is not None:
-        input_image = Image.open(image).convert("RGB")
-        result = run_prediction(input_image, model)
-        resized_image = result["resized"]
-        mask_image = result["mask"]
 
-        # Mostrar Ground Truth si está disponible
-        COCO_JSON_PATH = 'data/_annotations.coco.json'
-        INPUT_IMAGES_DIR = 'data'
-        CATEGORY_COLORS = {
-            1: (255, 0, 0),    # Cerebelo
-            4: (0, 255, 0),    # Cisterna magna
-            6: (0, 0, 255),    # Vermis
-        }
 
-        gt_mask = generate_groundtruth_mask(image.name, COCO_JSON_PATH, INPUT_IMAGES_DIR, CATEGORY_COLORS)
-        metrics_df = None
-        if gt_mask:
-            gt_mask = gt_mask.resize(mask_image.size)
-            pred_mask_np = np.array(mask_image)
-            gt_mask_np = np.array(gt_mask)
-            num_classes = 3
-            metrics_df = calculate_metrics(gt_mask_np, pred_mask_np, num_classes)
-            return resized_image, mask_image, gt_mask, metrics_df
-        else:
-            return resized_image, mask_image, None, None
-    return None, None, None, None
 
-def generate_report_gradio(patient_name, record_number, week, original_image, segmented_image):
-    if original_image is not None and segmented_image is not None:
-        pdf_buffer = generate_pdf(
-            patient_name=patient_name,
-            record_number=record_number,
-            segmented_img=segmented_image,
-            original_img=original_image,
-            week=week,
-            logo_sacyl_path="logo_sacyl.png",
-            logo_junta_path="logo_junta.png"
-        )
-        return pdf_buffer
-    else:
-        return None
 
-with gr.Blocks() as iface:
-    gr.Markdown("""
+st.markdown("""
     <div style="text-align: center; padding: 10px 0;">
         <h1 style="font-size: 2.5em; font-weight: 600; color: #2c3e50;">SegmentFetal</h1>
         <p style="font-size: 1.1em; color: #555;">Sube una imagen de ecografía fetal para segmentar automáticamente el cerebelo, la cisterna magna y el vermis.</p>
@@ -415,64 +384,152 @@ with gr.Blocks() as iface:
             La herramienta busca proporcionar referencias anatómicas rápidas y confiables para apoyar la evaluación clínica del desarrollo de la fosa posterior en diagnósticos prenatales.
         </p>
     </div>
-    """)
+""", unsafe_allow_html=True)
 
-    with gr.Row():
-        input_image = gr.Image(label="Imagen de Ecografía Fetal (JPG o PNG)")
 
-    with gr.Row():
-        with gr.Column():
-            patient_name_input = gr.Textbox(label="Nombre del paciente", placeholder="Ejemplo: Ana Gómez Ruiz")
-            record_number_input = gr.Textbox(label="Número de historia clínica", placeholder="Ejemplo: HCU123456")
-            week_input = gr.Number(label="Semana de gestación", minimum=10, maximum=40, step=1)
-            segment_button = gr.Button("Segmentar Imagen")
+uploaded_file = st.file_uploader("Sube una imagen de ecografía fetal (JPG o PNG)", type=["png", "jpg", "jpeg"])
 
-        with gr.Column():
-            original_output = gr.Image(label="Imagen Original")
-            segmented_output = gr.Image(label="Imagen Segmentada")
-            groundtruth_output = gr.Image(label="Máscara Ground Truth (si disponible)")
-            metrics_output = gr.DataFrame(label="Métricas de Segmentación (si Ground Truth disponible)")
+if uploaded_file is not None:
+    input_image = Image.open(uploaded_file).convert("RGB")
 
-    gr.Markdown("""
-    <h4 style='text-align: center; margin-top: 30px; font-size: 2em; color: #2c3e50;'>
-        Resultados de Segmentación
-    </h4>
-    <div style='display: flex; justify-content: center; gap: 30px; margin-top: 10px; margin-bottom: 30px; color: #333; font-size: 0.9em;'>
-        <div style='display: flex; align-items: center; gap: 8px;'>
-            <div style='width: 15px; height: 15px; background-color: rgb(255,0,0); border: 1px solid #000;'></div>
-            <span>Cerebelo</span>
+    st.markdown("Procesando imagen...")
+
+    # Ejecutar predicción directamente, sin threading
+    result = run_prediction(input_image, model)
+
+    resized_image = result["resized"]
+    mask_image = result["mask"]
+
+
+        # Mostrar Ground Truth si está disponible
+    COCO_JSON_PATH = 'data/_annotations.coco.json'
+    INPUT_IMAGES_DIR = 'data'
+    CATEGORY_COLORS = {
+        1: (255, 0, 0),    # Cerebelo
+        4: (0, 255, 0),    # Cisterna magna
+        6: (0, 0, 255),    # Vermis
+    }
+
+    # Resultados de Segmentación
+    st.markdown("""
+        <h4 style='text-align: center; margin-top: 30px; font-size: 2em; color: #2c3e50;'>
+            Resultados de Segmentación
+        </h4>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+        <div style='display: flex; justify-content: center; gap: 30px; margin-top: 10px; margin-bottom: 30px; color: #333; font-size: 0.9em;'>
+            <div style='display: flex; align-items: center; gap: 8px;'>
+                <div style='width: 15px; height: 15px; background-color: rgb(255,0,0); border: 1px solid #000;'></div>
+                <span>Cerebelo</span>
+            </div>
+            <div style='display: flex; align-items: center; gap: 8px;'>
+                <div style='width: 15px; height: 15px; background-color: rgb(0,255,0); border: 1px solid #000;'></div>
+                <span>Cisterna Magna</span>
+            </div>
+            <div style='display: flex; align-items: center; gap: 8px;'>
+                <div style='width: 15px; height: 15px; background-color: rgb(0,0,255); border: 1px solid #000;'></div>
+                <span>Vermis</span>
+            </div>
+            <div style='display: flex; align-items: center; gap: 8px;'>
+                <div style='width: 15px; height: 15px; background-color: rgb(0,0,0); border: 1px solid #000;'></div>
+                <span>Fondo</span>
+            </div>
         </div>
-        <div style='display: flex; align-items: center; gap: 8px;'>
-            <div style='width: 15px; height: 15px; background-color: rgb(0,255,0); border: 1px solid #000;'></div>
-            <span>Cisterna Magna</span>
-        </div>
-        <div style='display: flex; align-items: center; gap: 8px;'>
-            <div style='width: 15px; height: 15px; background-color: rgb(0,0,255); border: 1px solid #000;'></div>
-            <span>Vermis</span>
-        </div>
-        <div style='display: flex; align-items: center; gap: 8px;'>
-            <div style='width: 15px; height: 15px; background-color: rgb(0,0,0); border: 1px solid #000;'></div>
-            <span>Fondo</span>
-        </div>
-    </div>
-    """)
+    """, unsafe_allow_html=True)
 
-    with gr.Row():
-        generate_report_button = gr.Button("Generar Informe PDF")
-        pdf_output = gr.File(label="Descargar Informe PDF")
+    st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)  # Añadir margen antes de las imágenes
 
-    segment_output = segment_button.click(
-        segment_and_report,
-        inputs=[input_image, patient_name_input, record_number_input, week_input],
-        outputs=[original_output, segmented_output, groundtruth_output, metrics_output]
-    )
+    gt_mask = generate_groundtruth_mask(uploaded_file.name, COCO_JSON_PATH, INPUT_IMAGES_DIR, CATEGORY_COLORS)
+    if gt_mask:
+        
+        gt_mask = gt_mask.resize(mask_image.size)
 
-    generate_report_button.click(
-        generate_report_gradio,
-        inputs=[patient_name_input, record_number_input, week_input, original_output, segmented_output],
-        outputs=[pdf_output],
-        preprocess=False,
-        postprocess=False
-    )
+        # Mostrar imágenes lado a lado
+        col1, col2, col3 = st.columns(3, gap="large")
 
-iface.launch()
+        with col1:
+            st.image(input_image, caption="Imagen Original", use_container_width=True)
+
+        with col2:
+            st.image(mask_image, caption="Imagen Segmentada", use_container_width=True)
+
+        with col3:
+            st.image(gt_mask, caption="Máscara Ground Truth", use_container_width=True, clamp=True)
+
+        
+        pred_mask_np = np.array(mask_image)
+        gt_mask_np = np.array(gt_mask)
+
+        
+        num_classes = 3
+        table_data = calculate_metrics(gt_mask_np, pred_mask_np, num_classes)
+        st.markdown("<h5 style='text-align: center; margin-top: 30px; font-size: 1.5em; color: #2c3e50;'>Métricas de Segmentación</h5>", unsafe_allow_html=True)
+        
+        html_table = table_data.to_html(index=False, classes="styled-table")
+
+        st.markdown("""
+            <style>
+            .styled-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 17px;
+            }
+            .styled-table th, .styled-table td {
+                border: 1px solid #ddd;
+                padding: 5px;  /* <-- Aquí ajustas la altura */
+                text-align: center;
+            }
+            .styled-table tr:last-child {
+                background-color: #f0f0f0;
+                font-weight: bold;
+            }
+            </style>
+        """, unsafe_allow_html=True)
+
+        st.markdown(html_table, unsafe_allow_html=True)
+
+    else:
+    # Mostrar imágenes lado a lado
+        col1, col2 = st.columns(2, gap="large")
+
+        with col1:
+            st.image(input_image, caption="Imagen Original", use_container_width=True)
+
+        with col2:
+            st.image(mask_image, caption="Imagen Segmentada", use_container_width=True)
+
+
+    # Formulario de información del paciente
+    with st.form("patient_info_form"):
+        st.markdown("""
+            <h4 style='text-align: center; margin-top: 40px; font-size: 1.8em; color: #2c3e50;'>
+                Información del Paciente
+            </h4>
+        """, unsafe_allow_html=True)
+        patient_name = st.text_input("Nombre del paciente", placeholder="Ejemplo: Ana Gómez Ruiz")
+        record_number = st.text_input("Número de historia clínica", placeholder="Ejemplo: HCU123456")
+        week = st.number_input("Semana de gestación", min_value=10, max_value=40, step=1)
+        submitted = st.form_submit_button("Generar Informe")
+
+    if submitted:
+        if not patient_name or not record_number:
+            st.error("Por favor, completa todos los campos antes de descargar el informe.")
+        else:
+            with st.spinner("Generando informe PDF..."):
+                pdf_buffer = generate_pdf(
+                    patient_name=patient_name,
+                    record_number=record_number,
+                    segmented_img=mask_image,
+                    week=week,
+                    original_img=input_image,
+                    logo_sacyl_path="logo_sacyl.png",
+                    logo_junta_path="logo_junta.png"
+                )
+            st.success("Informe generado con éxito. Haz clic en el botón para descargar.")
+            st.download_button(
+                label="Descargar informe PDF",
+                data=pdf_buffer,
+                file_name=f"{record_number}_{datetime.now().strftime('%Y%m%d')}.pdf",
+                mime="application/pdf"
+            )
