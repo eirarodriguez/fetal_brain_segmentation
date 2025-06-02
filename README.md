@@ -7,10 +7,13 @@
 ---
 Este proyecto implementa una aplicación para la segmentación automática de estructuras cerebrales fetales en ecografías 2D, en particular, las estructuras cerebelosas (como el cerebelo, vermis cerebeloso y cisterna magna). Utiliza técnicas de deep learning mediante redes neuronales convolucionales, entrenadas con imagenes clínicas reales y anotaciones en formato COCO. 
 
-La solución incluye una interfaz gráfica interactiva basada en Streamli, diseñada para facilitar su uso por parte de profesionales médicos sin necesidad de conocimientos técnicoa avanzados. Esta herramienta permite cargar ecografías, visualizar las segmentaciones generadas automáticamente y generar informes clínicos en PDF.
+La solución incluye una interfaz gráfica interactiva basada en Streamli, diseñada para facilitar su uso por parte de profesionales médicos sin necesidad de conocimientos técnicos avanzados. Esta herramienta permite cargar ecografías, visualizar las segmentaciones generadas automáticamente y generar informes clínicos en PDF.
 
 # Ejemplo de resultados
-A continuación se muestra una comparación visual de los resultados obtenidos  por el modelo U-Net:
+A continuación se muestra una comparación visual de los resultados obtenidos por el modelo U-Net.
+
+De izquierda a derecha se presentan: la imagen original, la máscara real (ground truth) y la predicción generada por el modelo. 
+
 ![Resultado U-Net](Memoria_TFG/img/image1_unet.png)
 
 ---
@@ -25,7 +28,7 @@ Para ejecutar la aplicación o las funcionalidades del proyecto localmente en ot
 ### Clonar el repositorio del proyecto desde GitHub: 
 **Nota**: Asegurate de tener [Git](https://git-scm.com/downloads) instalado en tu sistema.
 ```bash
-git clone https://github.com/eirarodriguez /fetal_brain_segmentation.git
+git clone https://github.com/eirarodriguez/fetal_brain_segmentation.git
 cd fetal_brain_segmentation
 ```
 
