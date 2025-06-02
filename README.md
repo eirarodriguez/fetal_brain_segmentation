@@ -11,6 +11,7 @@ La solución incluye una interfaz gráfica interactiva basada en Streamli, dise�
 
 # Ejemplo de resultados
 A continuación se muestra una comparación visual de los resultados obtenidos  por el modelo U-Net:
+![Resultado U-Net](Memoria_TFG/img/image1_unet.png)
 
 ---
 # Uso de la interfaz
