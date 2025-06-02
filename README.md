@@ -1,5 +1,5 @@
 # Segmentación automática de estructuras cerebelosas en ecografías fetales
-**Autora:**: Eira Rodríguez Martín
+**Autora**: Eira Rodríguez Martín
 
 **Tutores**: 
 - Pedro Latorre Carmona
