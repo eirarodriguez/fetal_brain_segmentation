@@ -1,0 +1,58 @@
+\apendice{Manual del investigador} 
+
+\section{Estructura de directorios}
+
+El proyecto se entrega organizado en una carpeta principal denominada \texttt{fetal\_brain\_segmentation}, que contiene todos los archivos y subdirectorios necesarios para su ejecución y análisis. A continuación, se describe el contenido y propósito de cada uno de los elementos incluidos:
+
+\begin{itemize}
+    \item \textbf{data}: Carpeta que contiene las imágenes utilizadas para el entrenamiento, validación y prueba del modelo. También incluye el archivo \texttt{\_annotations.coco.json}, que recoge las anotaciones en formato COCO utilizadas para generar las máscaras ground truth.
+    \item \textbf{Ejemplos}: Contiene varios notebooks de ejemplo para el entrenamiento del modelo con diferentes configuraciones. Está organizada en tres carpetas, cada una correspondiente a una estrategia específica. En cada una se incluyen implementaciones de diferentes arquitecturas de segmentación:
+    \begin{itemize}
+        \item \texttt{train\_basico/}: Entrenamiento técnicas adicionales, útil como línea base para comparación.
+        \item \texttt{data\_augmentation/}: Incluye ejemplos con técnicas de aumento de datos aplicadas para mejorar la capacidad de generalización del modelo. En esta carpeta se encuentran archivos \texttt{.py} y \texttt{.ipynb} para distintas arquitecturas.
+        \item \texttt{early\_stopping/}: Añade la técnica de parada temprana early stopping a las configuraciones anteriores, con el objetivo de evitar el sobreajuste. También se organiza por arquitecturas y tipo de archivo.
+
+    En todas las subcarpetas se encuentran ejemplos de entrenamiento para modelos como U-Net, U-Net++, FPN, LinkNet, MANet y PSPNet 
+    \end{itemize}
+    \item \textbf{Resultados}: Estructurada igual que la carpeta \texttt{Ejemplos}, contiene los resultados de cada entrenamiento. Dentro de cada subcarpeta (\texttt{train\_basico}, \texttt{data\_augmentation}, \texttt{early\_stopping}) se recopilan los análisis cuantitativos (métricas como IoU y precisión) y cualitativos (visualización de segmentaciones) generados por los modelos correspondientes. Además, incluye el informe base, que contiene los marcadores utilizados para sustituir las imágenes y recoger las métricas obtenidas durante el entrenamiento.
+    \item \textbf{Estado del arte}: Directorio con los artículos científicos utilizados como referencia para redactar el apartado teórico del trabajo. Algunos de los artículos consultados no han podido ser descargados. 
+    \item \textbf{Modelo}: Carpeta que contiene el archivo de pesos del modelo final entrenado (.pth). Este modelo es el utilizado por la aplicación de inferencia para generar las segmentaciones automáticas.
+    \item \textbf{app.py}: \textit{Script} principal de la aplicación desplegable mediante Streamlit. Permite cargar una imagen ecográfica, aplicar segmentación automática y mostrar los resultados junto con la máscara real si está disponible.
+    \item \textbf{\texttt{LICENSE}}: Archivo de licencia del proyecto, donde se especifican los términos legales de uso, modificación y distribución del código.
+    \item \textbf{\texttt{README.md}}: Documento de introducción al proyecto, donde se explican las instrucciones básicas de uso, instalación y ejecución.
+    \item \textbf{Memoria TFG}: Carpeta que contiene los archivos y carpetas para poder ejecutar tanto la memoria como los anexos en LaTeX. 
+    \item \textbf{requirements.txt}: Archivo con la lista de dependencias del proyecto. Contiene los paquetes de Python necesarios para ejecutar tanto el entrenamiento de modelos como la aplicación de inferencia. 
+\end{itemize}  
+
+\section{Compilación, instalación y ejecución del proyecto}
+
+Los pasos necesarios para la compilación, instalación y ejecución del proyecto se encuentran detallados en el Anexo B. En él se explica cómo configurar el entorno virtual, instalar las dependencias necesarias, preparar los datos y lanzar la interfaz de usuario para realizar pruebas o usar el sistema en producción.
+
+
+\section{Pruebas del sistema}
+
+La validación del sistema se llevó a cabo mediante la supervisión directa de un profesional médico del Servicio de Ginecología y Obstetricia del HUBU. Durante el desarrollo y las fases de prueba, se le presentaron distintos ejemplos de segmentación generados por el modelo, así como una demostración completa del funcionamiento de la interfaz.
+
+A través de observaciones cualitativas y preguntas directas, se recogió una valoración sobre la utilidad clínica del sistema, la claridad visual de los resultados y la precisión percibida en la segmentación. Esta retroalimentación resultó especialmente útil para identificar posibles mejoras desde el punto de vista del usuario final, especialmente en lo relativo a la interpretación de los datos y la usabilidad de la herramienta.
+
+
+
+\section{Instrucciones para la modificación o mejora del proyecto}
+
+El proyecto proporciona una base sólida para la segmentación automática de estructuras cerebrales fetales en imágenes ecográficas, y puede ser ampliado o adaptado fácilmente. A continuación, se incluyen algunas recomendaciones para facilitar su modificación o mejora por parte de futuros investigadores o desarrolladores.
+
+El primer paso es clonar el repositorio público disponible en GitHub, el cual incluye toda la estructura de carpetas y \textit{scripts} necesarios. Se recomienda verificar las rutas de acceso a los datos, ya que pueden variar dependiendo del entorno de ejecución.
+
+El entorno más recomendable para trabajar con el proyecto es Visual Studio Code, dada su integración con Git, soporte para Python y terminal incorporada. 
+
+El sistema está constituido sobre PyTorch Lightning, lo cual permite una estructura clara y modular. Esto permite sustituir la arquitectura de segmentación por otra distinta, cambiar o añadir clases en el conjunto de datos, ajustar hiperparámetros e incorporar nuevas funcionalidades de pérdida o métricas de evaluación.
+
+Estas configuraciones se pueden modificar editando las clases correspondientes en los \textit{scripts} de entrenamiento, especialmente en la clase llamada \texttt{CerebellumModelSegmentation} y en los argumentos que se le pasan.
+
+Además, el sistema cuenta con una interfaz de usuario implementada en Streamlit, lo que permite su ejecución local de forma inmediata o su despliegue en la nube mediante plataformas como Streamlit Community Cloud. Para modificar la interfaz, basta con editar el archivo \texttt{app.py}, manteniendo la lógica principal de carga de imágenes y visualización de resultados.
+
+En caso de entrenar un nuevo modelo, es necesario reemplazar el archivo de pesos en la carpeta correspondiente y asegurarse de que la arquitectura definida coincide con la utilizada en el \textit{script} de inferencia.
+
+Por último, una de las principales limitaciones del proyecto es el tamaño reducido del conjunto de imágenes segmentadas manualmente. Para mejorar la precisión y generalización del modelo, se recomienda ampliar la base de datos con la colaboración de otros centros médicos u hospitales, el seguimiento longitudinal de casos en el HUBU, el uso de técnicas más avanzadas de aumento de datos y la aplicación de métodos de aprendizaje supervisado o anotación asistida.
+
+Estas estrategias permitirían incorporar mayor diversidad gestacional, variabilidad clínica y robustez en la segmentación, incrementando así el valor clínico y la fiabilidad del sistema desarrollado.

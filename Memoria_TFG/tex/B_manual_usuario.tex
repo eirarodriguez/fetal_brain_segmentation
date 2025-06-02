@@ -1,0 +1,87 @@
+\apendice{Documentación de usuario}
+
+\section{Requisitos software y hardware para ejecutar el proyecto}
+
+\subsection{Para el Usuario Final} 
+La aplicación ha sido diseñada para ser accesible y funcional sin la necesidad de instalaciones complejas ni requisitos de hardware específicos por parte del usuario. Los requisitos de software se limitan a un navegador web, ya que la aplicación se ejecuta íntegramente en la nube. Se recomienda una conexión a Internet estable y de banda ancha para asegurar una experiencia de usuario fluida, especialmente durante la carga de imágenes para su procesamiento.
+
+\subsection{Para el Usuario con Perfil Técnico / Investigador}
+Para aquellos usuarios que precisen acceder al código fuente, realizar modificaciones, entrenar el modelo o ejecutar la aplicación localmente, se precisan los siguientes requisitos:
+
+\begin{itemize}
+    \item \textbf{Requisitos de Hardware}: Se necesita un ordenador con un procesador multinúcleo. Para un entrenamiento eficiente de modelos de \textit{deep learning}, es altamente aconsejable contar con una tarjeta gráfica (GPU) compatible con CUDA. En caso de no disponer de GPU local, se puede optar por el uso de servicios de computación en la nube con Google Colaboratory \footnote{\url{https://colab.research.google.com/}}.
+    \item \textbf{Requisitos de Software}: El proyecto está desarrollado principalmente en Python. Se recomienda utilizar un gestor de entornos virtuales como \texttt{venv} para manejar las dependencias del proyecto de forma aislada. 
+    
+    Las bibliotecas Python necesarias están detalladas en el archivo denominado \texttt{requirements.txt} ubicado en el directorio raíz del proyecto, y pueden instalarse mediante pip. Las más destacadas incluyen:
+    \begin{itemize}
+        \item torch
+        \item torchvision
+        \item numpy, pandas, matplotlib, scikit-learn (para manipulación de datos y visualización)
+        \item segmentation\_models.pytorch
+        \item streamlit
+    \end{itemize}
+\end{itemize}
+En ausencia de una GPU local, el usuario puede optar por plataformas en la nube como Google Colaboratory. Para ello, será necesario disponer de una cuenta gratuita de Google, lo que permitirá ejecutar notebooks preconfiguradas sin necesidad de instalaciones locales.
+
+
+\section{Manuales y/o Demostraciones prácticas}
+Esta sección describe los procedimientos necesarios para que el usuario pueda acceder y ejecutar la aplicación. 
+\subsection{Para el Usuario Final}
+El acceso a la aplicación para el usuario final es directo y no requiere ningún proceso de instalación. El usuario deberá abrir un navegador web y acceder a la aplicación mediante el siguiente enlace: 
+
+\begin{center}
+\url{https://fetalbrainsegmentation.streamlit.app/} 
+\end{center}
+ 
+Una vez que la página haya cargado, la interfaz principal de la aplicación estará disponible para su uso inmediato.
+\subsection{Para el Usuario con Perfil Técnico / Investigador}
+Para ejecutar la aplicación o las funcionalidades del proyecto localmente en otro ordenador, el usuario deberá seguir los siguientes pasos:
+\begin{itemize}
+    \item \textbf{Clonar el repositorio del proyecto desde GitHub}: Para obtener el código fuente del proyecto, se debe utilizar el comando en la terminal:
+    
+    \textbf{Nota: Es necesario tener instalado \texttt{Git} en el sistema. Puede descargarse e instalarse desde su sitio oficial web: \url{https://git-scm.com/downloads}}
+    
+    \begin{lstlisting}
+    git clone https://github.com/eirarodriguez 
+    /fetal_brain_segmentation.git
+    cd fetal_brain_segmentation
+    \end{lstlisting}
+
+    \item \textbf{Instalar Python}: Se debe tener Python 3.8 o superior instalado en su sistema operativo. Se recomienda utilizar la versión más reciente compatible con las librerías del proyecto. Su descarga se puede realizar desde su sitio web oficial: \url{https://www.python.org/downloads/}
+    \item \textbf{Crear un entorno virtual (opcional pero recomendado)}: Esto aísla las dependencias del proyecto del resto de su sistema Python, evitando conflictos con otras instalaciones.
+    \begin{lstlisting}
+    python -m venv venv
+    source venv/bin/activate # En Linux/macOS
+    .\venv\Scripts\activate # En Windows
+    \end{lstlisting}
+    \item \textbf{Instalar dependencias listadas en requirements.txt}: una vez activado el entorno virtual, instale todas las bibliotecas necesarias para el proyecto. Estas están detalladas en el archivo \texttt{requirements.txt} ubicado en la raíz del repositorio.
+    \begin{lstlisting}
+        pip install -r requirements.txt
+    \end{lstlisting}
+    \item \textbf{Ejecutar la aplicación localmente con Streamlit}: Para iniciar la interfaz de usuario web de la aplicación en su máquina local, el siguiente comando desde el directorio raíz del proyecto:
+    \begin{lstlisting}
+        streamlit run app.py
+  \end{lstlisting}
+   Esto abrirá la aplicación automáticamente en el navegador en la dirección http://localhost:8501/. Si no se abre automáticamente, el usuario puede copiar y pegar la URL que aparece en la consola en cualquier navegador web.
+   \item \textbf{Ejecutar el script principal de entrenamiento}: En la carpeta \texttt{Ejemplos/} se incluyen distintos scripts de entrenamiento con configuraciones variadas. 
+   
+   Si se ejecuta desde Google Colab, basta con subir el notebook correspondiente en el entorno de Colab junto con el documento llamado \texttt{Informe.docx}, y ejecutar las celdas una a una. 
+
+   En cambio, si se ejecuta desde un entorno local (por ejemplo, con Visual Studio Code), será necesario ejecutar los scripts manualmente desde la terminal. Un ejemplo sería:
+   \begin{verbatim}
+       python Ejemplos/early_stopping_unet.py
+   \end{verbatim}
+   
+   Este comando ejecutará el pipeline completo: entrenamiento, evaluación del modelo y generación del informe.
+
+    \textbf{Aclaraciones}
+    Los scripts incluidos en el proyecto, están adaptados para su ejecución en Google Colab, por lo que contienen comandos específicos de dicho entorno (como \texttt{!pip install} o rutas absolutas tipo \texttt{/content/}. Si se desea ejecutarlos en un entorno local, será necesario realizar algunas adaptaciones: eliminar los comandos exclusivos de Colab y ajustar rutas de acceso a los archivos.
+
+    Además, por motivos de protección de datos y privacidad, no se proporciona la clave API de Roboflow necesaria para descargar el proyecto. Los usuarios que deseen trabajar con un conjunto de datos deberán crear su propio conjunto de datos compatible con el formato COCO. 
+   
+\end{itemize}
+
+
+
+    
+     

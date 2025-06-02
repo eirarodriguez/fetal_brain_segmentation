@@ -1,0 +1,30 @@
+\capitulo{6}{Conclusiones}
+
+El presente trabajo ha permitido desarrollar un sistema de segmentación automática de estructuras cerebrales en imágenes médicas fetales, basado en técnicas de aprendizaje profundo. A lo largo del proyecto se han abordado todas las fases necesarias para construir una solución robusta, desde el tratamiento del conjunto de datos hasta el entrenamiento y despliegue del modelo, incluyendo la evaluación cuantitativa y la visualización de resultados.
+
+\section{Aspectos relevantes.}
+
+El desarrollo de este proyecto ha supuesto un proceso intensivo de toma de decisiones, resolución de problemas y adquisición de competencias técnicas en distintas áreas del aprendizaje profundo y la ingeniería de software aplicada a imágenes médicas. A continuación, se recogen los aspectos más relevantes y no triviales del trabajo realizado, tanto desde el punto de vista técnico como formativo.
+
+Se ha generado la máscara \textit{ground truth} correspondiente para cada imagen del dataset, codificada en formato multiclase. Este paso ha resultado esencial para garantizar una evolución rigurosa de las predicciones y facilitar el análisis comparativo tanto visual como cuantitativo, lo que resulta especialmente útil en entornos clínicos y docentes. Gracias a esta etapa de procesamiento, se dispone de un conjunto de datos limpio, estructurado y reutilizable, lo cual establece una base sólida para futuras investigaciones.
+
+Uno de los logros más relevantes ha sido la adaptación de un conjunto de datos en formato COCO a un entorno compatible con aprendizaje profundo, generando máscaras segmentadas multicategoría a partir de anotaciones poligonales. Este proceso ha requerido un tratamiento cuidadoso de las clases anatómicas relevantes (cerebelo, cisterna magna y vermis cerebeloso), permitiendo su identificación precisa durante el entrenamiento.
+
+A nivel de arquitectura, se ha evaluado el rendimiento de distintos modelos, siendo \texttt{U-Net} el que ha ofrecido los mejores resultados en términos de \texttt{IoU}, especialmente tras aplicar técnicas de regularización con \textit{data augmentation} y \textit{early stopping}. La integración de estas técnicas ha contribuido significativamente a mejorar la capacidad de generalización del sistema y a prevenir el sobreajuste en entornos de datos limitados, lo cual es habitual en contextos clínicos.
+
+Otro aspecto importante ha sido la implementación del modelo dentro de un entorno profesional con \texttt{PyTorch Lightning}, facilitando la organización del código, el seguimiento de métricas y el uso de estrategias como \textit{ModelCheckpoint} y \textit{segmentation\_models\_pytorch}. También ha permitido acceder a arquitecturas preentrenadas potentes como \texttt{ResNeXt50}, mejorando la precisión del modelo sin necesidad de entrenar desde cero.
+
+
+Desde una perspectiva práctica, el proyecto culmina con el desarrollo de una aplicación interactiva en \texttt{Streamlit}, que permite cargar imágenes, ejecutar inferencias y visualizar los resultados en tiempo real. Esta herramienta, acompañada de la generación automática de informes médicos en formato PDF, representa un paso real hacia la integración de soluciones de inteligencia artificial en entornos clínicos, orientadas a la mejora del diagnóstico prenatal.
+
+Todo el código ha sido documentado y estructurado para permitir su ejecución reproducible. La segmentación, entrenamiento, validación y visualización están organizadas en módulos separados, lo que facilita tanto su reutilización como su posible ampliación por otros usuarios o investigadores.
+
+Pese a los buenos resultados obtenidos, el proyecto ha puesto en evidencia algunas limitaciones, como la escasez de datos y la dificultad para abordar ciertas estructuras anatómicas de tamaño reducido. Estas limitaciones abren la puerta a futuras líneas de trabajo que permitirían mejorar la precisión, robustez y utilidad clínica del sistema. Entre ellas, se propone aumentar el conjunto de entrenamiento, incorporando mayor variabilidad en las imágenes, así como reconsiderar la inclusión de estructuras como el cuarto ventrículo, cuya segmentación resultó poco precisa en las fases iniciales.
+
+En conjunto, el trabajo ha supuesto una experiencia formativa completa, permitiendo consolidar conocimientos sobre visión por computador, redes neuronales convolucionales y desarrollo de software aplicado al ámbito biomédico. Las técnicas implementadas, los problemas resueltos y las decisiones tomadas durante el proceso representan una base sólida para futuras líneas de investigación y desarrollo en el campo de la imagen médica.
+
+Finalmente, la herramienta desarrollada no solo presenta utilidad clínica, sino también potencial educativo, al permitir la visualización simultánea de la predicción del modelo y la verdad de terreno. Esta capacidad de mostrar errores o aciertos en tiempo real puede ser útil en la formación de personal médico o en la validación cualitativa de modelos.
+
+
+
+

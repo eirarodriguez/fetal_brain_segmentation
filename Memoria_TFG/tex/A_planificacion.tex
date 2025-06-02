@@ -1,0 +1,241 @@
+\apendice{Plan de Proyecto Software}
+
+\section{Introducción}
+
+La planificación del proyecto se ha llevado a cabo siguiendo una estructura clara, orientada a cumplir los objetivos técnicos y académicos establecidos. Todo el desarrollo y seguimiento del trabajo se ha gestionado a través del repositorio de GitHub: \href{https://github.com/eirarodriguez/fetal_brain_segmentation} {fetal\_brain\_segmentation}, donde se recoge de forma organizada la evolución del proyecto.
+
+\section{Planificación temporal}
+
+Para la planificación temporal del proyecto, se seleccionó GitHub Issues junto con una metodología  CRISP-DM (CRoss Industry Standard Process for Data Mining) \cite{crispdm2021}. Esta metodología ágil, ampliamente aplicada en la minería de datos y otros ámbitos relacionados, ha permitido una gestión estructurada del proyecto. Su utilización en conjunto con GitHub Issues ha facilitado la creación de tareas, el seguimiento del progreso y la generación de una comunicación entre los pasos para alcanzar el objetivo.
+
+El desarrollo del proyecto se estructuró en seis sprints, cada uno alineado con las fases clave de la metodología CRISP-DM, desde la comprensión inicial hasta el despliegue final.
+
+\subsection{Sprint 1: Comprensión del Negocio}
+
+Fecha : 28/10/2024 - 03/02/2025
+
+En esta fase inicial, se buscó comprender los objetivos clave del proyecto y el problema clínico a abordar, sentando las bases para el futuro trabajo.
+
+Este sprint se dividió en 5 issues explicadas a continuación:
+
+\begin{itemize}
+    \item \textbf{Definición del objetivo del proyecto:} Se llevaron a cabo múltiples reuniones con los tutores académicos y el obstetra. El objetivo fue comprender los requisitos clínicos, los recursos disponibles y definir el propósito central del proyecto. Durante estas sesiones se discutieron aspectos como las necesidades clínicas que el proyecto busca  abordar, las imágenes disponibles y su calidad, así como las posibles limitaciones que podrían surgir.
+    \item \textbf{Documentación bibliográfica inicial:} Recopilación y análisis exhaustivo de artículos científicos relacionados con la segmentación de imágenes medicas mediante \textit{deep learning}, con el fin de identificar los métodos y arquitecturas más adecuadas para el proyecto.
+    \item \textbf{Importación de plantilla LaTeX en Overleaf:} Esta tarea consistió en la descarga de la plantilla oficial de LaTeX desde el repositorio GitHub del Grado en Ingeniería de la Salud. Posteriormente, se importó en Overleaf y se llevó a cabo una investigación sobre el uso y las funcionalidades de la herramienta para la redacción de la Memoria.
+    \item \textbf{Redacción del documento del Comité de Ética:} Esta tarea consistió en la elaboración del documento necesario para obtener la autorización y el acceso a las imágenes de ultrasonido 2D del área de Ginecología del Hospital Universitario de Burgos, esenciales para el desarrollo del proyecto. Antes de su aprobación final, se realizaron modificaciones para aclarar aspectos solicitados por el comité. 
+    \item \textbf{Investigación de Técnicas de Deep Learning para Segmentación de Imágenes:} Se llevó a cabo un estudio exhaustivo sobre la aplicación de \textit{deep learning} en la segmentación de imágenes médicas, recopilando información relevante para identificar las técnicas más adecuadas y establecer una base teórica sólida para la implementación del proyecto.
+\end{itemize}
+
+\subsection{Sprint 2: Comprensión de los Datos}
+
+Fecha : 15/11/2024 - 03/04/2025
+
+Este sprint se centró en el análisis exploratorio de los datos iniciales y la selección de herramientas para su gestión, determinando la idoneidad de las imágenes para el proyecto.
+
+Se divide en 3 issues explicadas a continuación:
+\begin{itemize}
+    \item \textbf{Revisión de imágenes proporcionadas}: Antes de iniciar el procesamiento, se revisaron las imágenes ultrasonido disponibles para evaluar su calidad y observar la visibilidad de las estructuras anatómicas que se deseaban segmentar.
+    \item \textbf{Evaluación de herramientas para gestión de datos anotados}: Se analizaron diversas opciones de software para gestionar y explorar las imágenes y anotaciones. Inicialmente se consideró VGG Image Annotator (VIA), pero posteriormente se determinó que Roboflow ofrecía una solución más completa y adaptable a los cambios previstos en el proyecto, especialmente en la versión de los conjuntos de datos.
+    \item \textbf{Pruebas de visualización}: Se desarrolló un script en Python capaz de cargar y visualizar las imágenes de ultrasonido, adaptando su lectura al formato específico de los datos proporcionados para asegurar una correcta interpretación.
+\end{itemize}
+
+\subsection{Sprint 3: Preparación de los Datos}
+
+Fecha : 28/10/2024 - 28/04/2025
+
+Durante este sprint, se realizó la preparación y transformación de los datos para adaptarlos al formato requerido por los modelos de \textit{deep learning}
+
+Este sprint se dividió en 4 issues explicadas a continuación:
+\begin{itemize}
+    \item \textbf{Crear imagen Ground Truth:} Se llevó a cabo un proceso de anotación manual utilizando la herramienta VGG Image Annotator (VIA), con el objetivo de generar máscaras de referencia (ground truth) para el entrenamiento y evaluación de los modelos de segmentación. Esta tarea consistió en delimitar con precisión las regiones anatómicas de interés en las ecografías fetales. 
+    \item \textbf{Crear la máscara de las máscaras Groundtruth a partir de un JSON:} A partir de los archivos generados en VIA en formato JSON, se desarrolló un script en Python que extrae las coordenadas de los polígonos anotados y asigna un color específico a cada clase según un diccionario predefinido. Como resultado, se generan máscaras segmentadas codificadas por clase, que son almacenadas en el directorio de salida para su posterior uso en el entrenamiento.
+
+    Con el nuevo uso de Roboflow, se genera un único archivo en formato COCO que centraliza las anotaciones de todo el conjunto de imágenes en lugar de que cada imagen, en lugar de contar con un archivo JSON por cada imagen. Esto requirió adaptar el script para recorrer el JSON global y generar las máscaras correspondientes para cada imagen.
+    \item \textbf{Generación de imágenes Ground Truth con Roboflow:} Tras probar distintas arquitecturas de \textit{deep learning}, se detectó la necesidad de reorganizar los archivos de anotaciones en formato JSON. Roboflow se utilizó como herramienta de gestión, ya que permitía versionar el conjunto de datos, mantener organizadas tanto las imágenes originales como sus máscaras correspondientes, y exportar anotaciones de múltiples formatos, incluyendo COCO, que fue el seleccionado para este proyecto.
+    \item \textbf{Reestructuración de las clases a segmentar:} A partir del análisis de los primeros entrenamientos, se observó un bajo rendimiento en la segmentación del cuarto ventrículo. Por ello, se optó por eliminar dicha clase y centrar el modelo en aquellas estructuras con mayor interés clínico. Además, se unificaron los hemisferios del cerebelo (inicialmente tratadas como dos clases separadas) en una sola clase, lo que contribuyó a simplificar el problema y mejorar los resultados obtenidos. 
+\end{itemize}
+
+\subsection{Sprint 4: Modelado}
+
+Fecha : 18/01/2025 - 29/04/2025
+
+En este sprint, se exploraron y aplicaron diversas técnicas de modelado para identificar y optimizar las arquitecturas más efectivas en la detección de las estructuras cerebelosas.
+
+Este sprint se divide en 7 issues explicadas a continuación:
+\begin{itemize}
+    \item \textbf{Implementación de métodos tradicionales de segmentación:} Al inicio del proyecto se exploraron técnicas clásicas de segmentación, como K-means y contornos activos, con el objetivo de establecer una línea de base y comprender la complejidad del problema. Sus limitaciones a la hora de capturar detalles anatómicos precisos motivaron el uso de modelos basados en aprendizaje profundo.
+    \item \textbf{Segmentación de Deep Learning utilizando YOLOv11 y DeepLabV3+:} La primera aproximación con modelos de \textit{deep learning} incluyó la implementación de YOLOv11, adaptado para tareas de segmentación, y DeepLabV3+, conocido por su rendimiento en segmentación semántica. Sin embargo, estos modelos no ofrecieron resultados satisfactorios en el contexto del proyecto, lo que llevó a explorar arquitecturas alternativas.
+    \item \textbf{Segmentación de Deep Learning utilizando SAM:} Se evaluó el modelo Segment Anything Model (SAM). Si bien SAM mostró un rendimiento aceptable en la segmentación general del cerebro, su precisión fue limitada al intentar distinguir múltiples clases específicas del cerebelo. Esto motivó la decisión de priorizar otros modelos más especializados. 
+    \item \textbf{Segmentación de Deep Learning utilizando el repositorio segmentation\_models.pytorch:} Se empleó la biblioteca segmentation\_models.pytorch, que permite implementar múltiples arquitecturas de segmentación como U-Net, U-Net++, FPN, entre otras, con una estructura de código unificada. Esta herramienta facilitó la compración entre modelos y el ajuste eficiente de hiperparámetros. La biblioteca se usó la base del \textit{pipeline} final del proyecto.
+    \item \textbf{Implementación de Data Augmentation en el proceso de entrenamiento}: Con el objetivo de enriquecer el conjunto de datos de entrenamiento y mejorar la robustez del modelo frente a variaciones en las imágenes de entrada, se implementaron técnicas de aumento de datos (\textit{Data Augmentation}). Esto incluyó rotaciones aleatorias, cambios de escala y ajuste de contraste, aplicadas a las imágenes durante el entrenamiento.
+    \item \textbf{Implementación de EarlyStopping en el proceso de entrenamiento:} Para evitar el sobreajuste, se integró la técnica de EarlyStopping, que permitió finalizar automáticamente el entrenamiento cuando la métrica de validación dejaba de mejorar durante varias épocas consecutivas.
+    \item \textbf{Ajuste en la configuración del modelo y entrenamiento:} Se realizaron ajustes iterativos en la configuración de los modelos y parámetros de entrenamiento, incluyendo la optimización del número de épocas, la función de pérdida y el tamaño del \textit{batch}, con el fin de maximizar el rendimiento del modelo final.
+\end{itemize}
+\subsection{Sprint 5: Evaluación}
+
+Fecha : 14/04/2025 - 22/05/2025
+
+Este sprint se centró en la evaluación sistemática del modelo final, con el objetivo de comprobar el rendimiento de las estructuras seleccionadas y validar su idoneidad para el caso clínico.
+Este sprint se divide en 3 issues explicadas a continuación:
+\begin{itemize}
+    \item \textbf{Crear un informe sobre los resultados del proyecto:} Se organizaron los resultados obtenidos tras las distintas pruebas realizadas con los modelos de segmentación. Se generó un informe inicial que cambiaría los resultados según la arquitectura con la que estuviésemos trabajando. Se incluyeron resultados visuales y cualitativos basados en los errores y aciertos del modelo. 
+    \item \textbf{Evaluación del rendimiento de los modelos:} Se analizaron diferentes métricas como la IoU (Intersection over Union) media por clase y la precisión global, así como un análisis visual de las máscaras segmentadas frente a la ground truth. Este análisis permitió identificar qué arquitectura era la más adecuada para nuestro proyecto justificando su selección.
+    \item \textbf{Redacción final del informe final de resultados:} Se documentaron de forma estructurada todos los resultados obtenidos. Esto incluyó tablas comparativas, gráficas de rendimiento y ejemplos visuales representativos de las segmentaciones. Esta tarea se enfocó en la preparación del contenido para el capítulo de resultados.
+    \item \textbf{Redacción del documento Memoria:} Elaboración del documento principal del Trabajo de Fin de Grado, que incluye la introducción del problema, los objetivos, el marco teórico, la metodología empleada los resultados obtenidos, el desarrollo de la solución propuesta, las conclusiones extraídas y las posibles líneas futuras de trabajo.
+\end{itemize}
+
+\subsection{Sprint 6: Implementación}
+
+Fecha : 25/04/2025 - 08/06/2025
+
+El último sprint del proyecto se enfocó en la creación de una interfaz accesible para profesionales médicos y la documentación técnica del código y uso de la aplicación.
+
+Este sprint se divide en 5 issues explicadas a continuación:
+\begin{itemize}
+    \item \textbf{Implementación de una aplicación:} Se diseñó e implementó una interfaz gráfica sencilla utilizando la biblioteca de Streamlit, pensada para que los profesionales clínicos pudieran utilizar la segmentación sin necesidad de conocimientos técnicos. La aplicación permite cargar una imagen ecográfica y obtener la máscara segmentada de forma automática.
+    \item \textbf{Implementación de funcionalidades extra en la interfaz:} Se añadieron funcionalidades adicionales, como la visualización de la ground truth si está disponible y sus métricas, una leyenda con las clases segmentadas y la posibilidad de descargar un PDF con formato de informe médico que contiene los resultados. 
+    \item \textbf{Subida del proyecto a GitHub:} Todo el conjunto de datos, el modelo entrenado y el código de la aplicación fueron organizados y subidos al repositorio público del proyecto en GitHub. 
+    \item \textbf{Despliegue de la aplicación en Streamlit Community Cloud:} Para permitir el acceso remoto a la aplicación sin necesidad de instalación, se publicó en Streamlit Community Cloud. Esta plataforma permite que cualquier usuario con conexión a Internet acceda a la aplicación a través del navegador, disponible en la URL: \url{https://fetalbrainsegmentation.streamlit.app/}
+    \item \textbf{Redacción del README.md}: Se redactó un archivo README.md detallado para el repositorio de GitHub. Incluye una descripción del proyecto, instrucciones de instalación y ejecución local.
+    \item \textbf{Redacción de Anexos:} Preparación y estructuración de los anexos, donde se incluirán los materiales complementarios como  la planificación, el manual para el usuario, el manual del programador, la descripción de los datos y el diseño del proyecto.
+\end{itemize}
+
+    
+\subsection{Planificación económica}
+En la planificación económica se van a tener en cuenta los gastos de software, hardware y de personal, con el objetivo de proporcionar una estimación de los recursos económicos necesarios para el desarrollo del proyecto.
+
+\subsubsection{Costes de hardware}
+El desarrollo se ha realizado desde un ordenador portátil sin unidad de procesamiento gráfico (GPU) dedicada. Dada la alta demanda computacional del entrenamiento de modelos de segmentación basados en redes neuronales convolucionales, se ha optado por utilizar la plataforma Google Colab Pro que ofrece acceso a entornos con GPU. 
+
+Aunque esta opción ha sido funcional, lo adecuado para una ejecución fluida y continua de este tipo de proyectos sería disponer de un equipo con GPU dedicada. A continuación, se presentan dos escenarios alternativos:
+
+\textbf{Opción A: Uso de Google Colab Pro}
+
+Esta opción considera la amortización del equipo de trabajo principal y el coste de la suscripción a Google Colab Pro \cite{googlecolabpro_ref}. Se ha estimado el tiempo de uso en 7 meses para el portátil (duración del proyecto) y 6 meses para la suscripción, asumiendo un uso intensivo durante la fase de modelado. Los costes asociados a esta opción se resumen en la Tabla \ref{tab:costes_hardware_A}.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{@{}P{3cm} P{2.0cm} P{2.0cm} P{2.0cm} P{2.0cm}@{}}
+    \textbf{Recurso} & \textbf{Precio (€)} & \textbf{Vida útil (años)} & \textbf{Tiempo de uso (meses)} & \textbf{Coste amortizado (€)} \\
+    \hline
+    Ordenador portátil (sin GPU)  & 900 & 5 & 7 & 105\\
+    Suscripción Google Colab Pro  & 10,79 €/mes  & -- & 6 & 64,74\\
+    \bottomrule
+    \end{tabular}
+    \caption{Costes de hardware: Uso de Google Colab Pro (Opción A)} \label{tab:costes_hardware_A}
+\end{table}
+\textbf{Opción B: Adquisición de equipo con GPU dedicada}
+Como alternativa, se considera la adquisición de un ordenador portátil con GPU dedicada, lo que permitiría realizar los entrenamientos localmente. La amortización se calcula sobre el mismo periodo de uso. Los costes asociados a esta opción se resumen en la Tabla~\ref{tab:costes_hardware_B}.
+\begin{table}[h]
+    \centering
+    \begin{tabular}{@{}P{3cm} P{2.0cm} P{2.0cm} P{2.0cm} P{2.0cm}@{}}
+    \textbf{Recurso} & \textbf{Precio (€)} & \textbf{Vida útil (años)} & \textbf{Tiempo de uso (meses)} & \textbf{Coste amortizado (€)} \\
+    \hline
+    Ordenador portátil con GPU  & 1.800 & 5 & 7 & 210\\
+    \bottomrule
+    \end{tabular}
+    \caption{Costes de hardware: Opción B (Adquisición de equipo con GPU dedicada)} \label{tab:costes_hardware_B}
+\end{table}
+\subsubsection{Costes de software}
+Todas las herramientas utilizadas durante el desarrollo han sido gratuitas y de código abierto (ej. Python, scikit-learn, OpenCV, GitHub). Por lo tanto, no se ha incurrido en costes por licencias o suscripciones para el desarrollo. 
+
+\subsubsection{Costes de personal}
+El desarrollo del proyecto ha requerido diversas tareas especializadas, incluyendo programación, procesamiento de datos, entrenamiento y evaluación de modelos de aprendizaje profundo, y despliegue de una aplicación funcional. Se estima una dedicación total de 8 meses a media jornada.
+
+Para la estimación de los costes de personal, se ha tomado como referencia el salario medio de un ingeniero biomédico en España. Según diversas fuentes, este salario se sitúa típicamente entre los 24.000 € y 30.000 € brutos anuales. Tomando como valor representativo de 27.000 € brutos anuales \cite{glassdoor_ingenierobiomedico}, esto equivale a aproximadamente 2.250 €.
+
+Para una dedicación a media jornada (50\% de la jornada laboral), se considera un salario mensual bruto de 1.125 €.
+
+En la Tabla \ref{tab:costes_personal} se detallan los costes asociados al personal, incluyendo las cotizaciones a la Seguridad Social \cite{ss_cotizaciones} y retenciones de IRPF \cite{calculador_salario}, basados en una estimación promedio para un salario de esta índole en España. También se ha incluido el cálculo del coste para la empresa.
+\begin{table}[h]
+    \small
+    \centering
+    \begin{tabular}{@{}P{6cm} P{3.0cm} P{3.0cm}@{}}
+    \textbf{Concepto} & \textbf{Porcentaje (\%)} &  \textbf{Coste mensual (€)} \\
+    \hline
+    Salario bruto  & -- & 1.125,00\\
+    Retención IRPF  & 15,13\% & 170,21\\
+    Cotización contingencias comunes & 4,70\% & 52,88\\
+    Cotización formación  & 0,10\% & 1,13\\
+    Cotización desempleo  & 1,55\% & 17,44\\
+    \textbf{Total cotizaciones}  & -- & 71,45\\
+    \textbf{Salario neto estimado}  & -- & 884,34\\
+    \hline
+    \textbf{Coste de Seguridad Social (empresa)} & -- & --\\
+    Contingencias comunes (empresa) & 23,60\% & 265,50\\
+    Contingencias desempleo (empresa) & 5,50\% & 61,88\\
+    Contingencias formación (empresa) & 0,60\% & 6,75\\
+    \textbf{Total cotizaciones (empresa)} & -- & 334,13\\
+    \end{tabular}
+    \caption{Costes de personal (estimación mensual)} \label{tab:costes_personal}
+\end{table}
+
+El coste total del personal se ha calculado considerando una dedicación continuada de 8 meses a media jornada de un perfil técnico con las competencias requeridas para el proyecto.
+
+\begin{align*}
+\text{Coste mensual total} &= \text{Salario bruto} + \text{Total cotizaciones (empresa)} \\
+&= 1125\,\text{\texteuro{}} + 334{,}13\,\text{\texteuro{}} \\ 
+&= 1459{,}13\,\text{\texteuro{}} 
+\end{align*}
+
+\begin{equation*}
+\text{Coste total personal} = 1459{,}13\,\text{\texteuro{}}/\text{mes} \cdot 8 \text{meses} = 11673{,}04\,\text{\texteuro{}} 
+\end{equation*}
+
+
+
+ \subsubsection{Costes totales del proyecto}
+ El coste total del proyecto se calcula sumando los costes de hardware, software y personal, para cada una de las opciones de hardware consideradas. A continuación, se muestran los costes totales estimados en función de la opción de hardware seleccionada (Tablas \ref{tab:costes_total_A} y \ref{tab:costes_total_B}).
+
+ 
+ \begin{table}[h]
+    \centering
+    \begin{tabular}{lcc}
+    \textbf{Tipo de coste} & \textbf{Coste Total}\\
+    \hline
+    Coste de Hardware (Opción A)  & 169,74 €\\
+    Coste de Software & 0,00 €\\
+    Coste de Personal & 11.673,04 €\\
+    \textbf{Total} & 11.842,78 €\\
+    \end{tabular}
+    \caption{Costes totales del proyecto considerando la Opción A} \label{tab:costes_total_A}
+\end{table}
+
+ \begin{table}[h]
+    \centering
+    \begin{tabular}{lcc}
+    \textbf{Tipo de coste} & \textbf{Coste Total}\\
+    \hline
+    Coste de Hardware (Opción B)  & 210,00 €\\
+    Coste de Software & 0,00 €\\
+    Coste de Personal & 11.673,04 €\\
+    \textbf{Total} & 11.883,04 €\\
+    \hfill
+    \end{tabular}
+    \caption{Costes totales del proyecto considerando la Opción B} \label{tab:costes_total_B}
+\end{table}
+
+\subsection{Viabilidad legal}
+Los datos empleados en este proyecto consisten en ecografías 2D de cerebros fetales procedentes del Hospital Universitario de Burgos (HUBU). Al tratarse de información de pacientes, fue necesaria la aprobación por parte del  Comité de Ética de la Investigación con Medicamentos (CEIM) del HUBU. El proyecto fue aprobado el 6 de mayo de 2025, con número CEIM 3246. En la Figura \ref{fig:aprobacion_ceim} se muestra el dictamen favorable a este estudio.
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{img/ceim_aprobacion.png}
+    \caption{Documento de aprobación del estudio por parte del CEIM del HUBU.}
+    \label{fig:aprobacion_ceim}
+\end{figure}
+
+
+El desarrollo del proyecto se ha llevado a cabo conforme a la legislación vigente en materia de protección de datos y ética en investigación biomédica, incluyendo:
+
+\begin{itemize}
+    \item \textbf{Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales.}
+    \item \textbf{Reglamento (UE) 2016/679 del Parlamento Europeo y del Consejo, de 27 de abril de 2016, relativo a la protección de las personas físicas en lo que respecta al tratamiento de datos personales y a la libre circulación de estos datos y por el que se deroga la Directiva 95/46/CE (Reglamento General de Protección de Datos - RGPD)}.
+    \item \textbf{Ley 14/2007, de Investigación Biomédica.}
+\end{itemize}
+Dado que se trabaja con datos médicos sensibles (ecografías fetales), se han aplicado técnicas estrictas de anonimización para garantizar la privacidad de los participantes. Los datos proporcionados ya se encontraban codificados y no vinculados a la identidad de los pacientes, asegurando así el cumplimiento de los principios éticos y legales.
+
+
+Por tanto, el proyecto se ha desarrollado dentro del marco normativo aplicable, garantizando la confidencialidad, integridad y uso ético de los datos biomédicos tratados.
+
