@@ -83,3 +83,11 @@ Este comando ejecutará el pipeline completo: entrenamiento, evaluación y gener
   - Ajusta las rutas de acceso a archivos.
 - Por motivos de privacidad, **no se proporciona la clave API de Roboflow**.  
   Si deseas usar tus propios datos, crea un conjunto en Roboflow y expórtalo en formato **COCO**.
+
+### Consideraciones legales sobre el conjunto de datos.
+El conjunto de datos incluido en este repositotio se proporciona exclusivamente con el objetivo de permitir el correcto despliegue automático de la aplicación en Streamlit Community Cloud. 
+
+**No está autorizado su uso, descarga, distribución ni reutilización para ningún otro fin.**
+
+Este dataset contiene imágenes clínicas confidenciales proporcionadas por el Hospital Universitario de Burgos (HUBU), y su uso está sujeto a las condiciones del CEIM y la Ley Orgánica 3/2018 de Protección de Datos Personales y garantía de los derechos digitales.
+**Cualquier otro uso fuera del alcance de este proyecto está espresamente prohibido**
