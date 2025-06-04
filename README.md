@@ -90,4 +90,4 @@ El conjunto de datos incluido en este repositotio se proporciona exclusivamente 
 **No está autorizado su uso, descarga, distribución ni reutilización para ningún otro fin.**
 
 Este dataset contiene imágenes clínicas confidenciales proporcionadas por el Hospital Universitario de Burgos (HUBU), y su uso está sujeto a las condiciones del CEIM y la Ley Orgánica 3/2018 de Protección de Datos Personales y garantía de los derechos digitales.
-**Cualquier otro uso fuera del alcance de este proyecto está espresamente prohibido**
+**Cualquier otro uso fuera del alcance de este proyecto está expresamente prohibido**
