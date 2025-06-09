@@ -12,7 +12,7 @@ Para aquellos usuarios que precisen acceder al código fuente, realizar modifica
     \item \textbf{Requisitos de Hardware}: Se necesita un ordenador con un procesador multinúcleo. Para un entrenamiento eficiente de modelos de \textit{deep learning}, es altamente aconsejable contar con una tarjeta gráfica (GPU) compatible con CUDA. En caso de no disponer de GPU local, se puede optar por el uso de servicios de computación en la nube con Google Colaboratory \footnote{\url{https://colab.research.google.com/}}.
     \item \textbf{Requisitos de Software}: El proyecto está desarrollado principalmente en Python. Se recomienda utilizar un gestor de entornos virtuales como \texttt{venv} para manejar las dependencias del proyecto de forma aislada. 
     
-    Las bibliotecas Python necesarias están detalladas en el archivo denominado \texttt{requirements.txt} ubicado en el directorio raíz del proyecto, y pueden instalarse mediante pip. Las más destacadas incluyen:
+    Las bibliotecas de Python necesarias están detalladas en el archivo denominado \texttt{requirements.txt} ubicado en el directorio raíz del proyecto, y pueden instalarse mediante pip. Las más destacadas incluyen:
     \begin{itemize}
         \item torch
         \item torchvision
@@ -75,6 +75,7 @@ Para ejecutar la aplicación o las funcionalidades del proyecto localmente en ot
    Este comando ejecutará el pipeline completo: entrenamiento, evaluación del modelo y generación del informe.
 
     \textbf{Aclaraciones}
+    
     Los scripts incluidos en el proyecto, están adaptados para su ejecución en Google Colab, por lo que contienen comandos específicos de dicho entorno (como \texttt{!pip install} o rutas absolutas tipo \texttt{/content/}. Si se desea ejecutarlos en un entorno local, será necesario realizar algunas adaptaciones: eliminar los comandos exclusivos de Colab y ajustar rutas de acceso a los archivos.
 
     Además, por motivos de protección de datos y privacidad, no se proporciona la clave API de Roboflow necesaria para descargar el proyecto. Los usuarios que deseen trabajar con un conjunto de datos deberán crear su propio conjunto de datos compatible con el formato COCO. 

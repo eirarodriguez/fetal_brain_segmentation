@@ -1,15 +1,17 @@
 \capitulo{4}{Metodología}
 
-\section{Descripción de los datos.}
+\section{Descripción de los datos}
 En este trabajo, las 34 ecografías proporcionadas por el Servicio de Ginecología y Obstetricia del Hospital Universitario de Burgos (HUBU) han servido como base para entrenar las distintas arquitecturas. Los datos fueron divididos en tres subconjuntos: entrenamiento, validación y prueba, con el fin de garantizar una evaluación sólida y evitar el sobreajuste del modelo. En este apartado se describen los datos utilizados.
  
-\section{Técnicas y herramientas.}
+\section{Técnicas y herramientas}
 \subsection{Entornos de desarrollo}
 \subsubsection{Google Colab}
 Google Colab\footnote{Sitio Web de Google Colab: \url{https://cloud.google.com/colab/docs?hl=es-419}} es una plataforma basada en la nube que permite ejecutar notebooks de Jupyter sin necesidad de configuración local. Está especialmente orientada a tareas de ciencia de datos, aprendizaje automático y educación, y ofrece acceso a recursos computacionales como GPUs y TPUs sin coste adicional. 
 
 Los notebooks se almacenan directamente en Google Drive, lo que facilita el acceso desde cualquier lugar y permite la colaboración en tiempo real.
+
 La plataforma es compatible con bibliotecas populares como PyTorch, TensorFlow, pandas y matplotlib, sin necesidad de instalaciones manuales. Permite ejecutar código Python, comandos del sistema e interactuar con el entorno como si fuera local, gracias a máquinas virtuales asignadas automáticamente. Su integración con el ecosistema de Google y su facilidad de uso la convierten en una herramienta ideal para prototipado de modelos de IA.
+
 \subsubsection{Visual Studio Code}
 Visual Studio Code \footnote{Sitio Web de Visual Studio Code: \url{https://code.visualstudio.com/}} (VS Code) es un editor de código fuente desarrollado por Microsoft, ampliamente utilizado por su ligereza, rapidez y capacidad de personalización mediante extensiones. En el presente proyecto, se ha utilizado como entorno principal para el desarrollo de la aplicación en Streamlit, permitiendo una edición fluida del código Python, así como la estructuración y prueba del flujo complementario de la herramienta.
 
@@ -124,7 +126,7 @@ Cada una de estas fases incluirá tareas específicas con un cronograma de ejecu
 
 \section{Técnicas}
 \subsection{Hold-out}
-Una de las técnicas usadas para garantizar que el modelo no solo aprende los datos del conjunto de entrenamiento, sino que también es capaz de generalizar a datos no vistos previamente es el método \textit{hold-out}. Esta consiste en dividir el conjunto de datos disponible en tres subconjuntos independientes \cite{deeplearning2016}:
+Una de las técnicas usadas para garantizar que el modelo no solo aprende los datos del conjunto de entrenamiento, sino que también es capaz de generalizar a datos no vistos previamente es el método \textit{hold-out}. Esta técnica consiste en dividir el conjunto de datos disponible en tres conjuntos independientes \cite{deeplearning2016}:
 \begin{itemize}
     \item \textbf{Conjunto de entrenamiento (\texttt{train})}: utilizado para ajustar los pesos internos del modelo. Durante esta fase, la red aprende los patrones presentes mediante el proceso de optimización y retropropagación del error (\textit{backpropagation}).
     \item \textbf{Conjunto de validación (\texttt{validation})}: empleado para evaluar el rendimiento del modelo durante el entrenamiento sin influir en el aprendizaje directo. Ayuda a ajustar \textit{hiperparametros} (como la tasa de aprendizaje o el número de capas) y detectar problemas como el \textit{sobreajuste} (\textit{overfitting}).
@@ -162,7 +164,7 @@ En el contexto del aprendizaje automático, la matriz de confusión es una herra
 \begin{figure}[h]
     \centering
     \includegraphics[width= 0.8 \textwidth]{img/matriz_confusion.png}
-    \caption{Esquema ilustrativo de una matriz de confusión. Adaptado de \cite{matrizconfusionimage}}
+    \caption{Esquema ilustrativo de la matriz de confusión. Adaptado de \cite{matrizconfusionimage}.}
     \label{fig:matriz_confusion}
 \end{figure}
 La matriz se organiza habitualmente con las clases reales en las filas y las claves predichas en las columnas. Entre los elementos que la componen destacan los verdaderos positivos (TP), que corresponden a las instancias correctamente clasificadas como positivas, y los falsos positivos (FP), que representan las instancias negativas que el modelo clasificó incorrectamente como positivas. Estos valores permiten calcular la precisión, una métrica clave para interpretar el comportamiento del modelo.
@@ -180,7 +182,7 @@ Matemáticamente, se define como:
 \begin{equation}
     \text{\texttt{IoU}} = \frac{|P \cap G|}{|P \cup G|}
 \end{equation}
-donde \textit{P} representa la máscara predicha y \textit{G} la máscara de referencia. Se calculan los píxeles correctamente identificados como pertenecientes a una clase entre los píxeles etiquetados como pertenecientes a la clase de interés. La métrica toma valores entre 0 y 1, donde 1 indica una superposición perfecta. En este trabajo, se calcula un valor de \texttt{IoU} para cada clase segmentada y luego se obtiene la media de estos valores, que corresponde a la media global del rendimiento del modelo de segmentación. \cite{cheng2021iou}
+donde \textit{P} representa la máscara predicha y \textit{G} la máscara de referencia. Se calculan los píxeles correctamente identificados como pertenecientes a una clase entre los píxeles etiquetados como pertenecientes a la clase de interés. La métrica toma valores entre 0 y 1, donde 1 indica una superposición perfecta. En este trabajo, se calcula un valor de \texttt{IoU} para cada clase segmentada y luego se obtiene la media de estos valores, que corresponde a la media global del rendimiento del modelo de segmentación \cite{cheng2021iou}.
 
 
 

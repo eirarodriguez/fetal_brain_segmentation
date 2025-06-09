@@ -2,7 +2,7 @@
 
 
 
-\section{Cuaderno de trabajo.}
+\section{Cuaderno de trabajo}
 
 \subsection{Comité de Ética}
 El proyecto comenzó con la obtención de la aprobación ética necesaria para el uso de imágenes clínicas. Se solicitó la autorización del CEIM del HUBU para acceder a imágenes de ecografía obstétrica. 
@@ -21,7 +21,7 @@ En las etapas iniciales del proyecto se exploraron diversas técnicas y modelos 
 \end{itemize}
 Por último, se optó por utilizar la librería \texttt{segmentation\_models\_pytorch}, que ofrece la implementación de un mismo modelo para el uso de varias arquitecturas como \texttt{Unet}, \texttt{Unet++}, \texttt{Linknet}, \texttt{FPN}, \texttt{MAnet}, \texttt{PSPNet} basados en redes convolucionales profundas. Esta elección permitió obtener una mayor precisión.
 
-\subsection{Desarrollo de la aplicación local.}
+\subsection{Desarrollo de la aplicación local}
 Una vez entrenado el modelo y almacenado el mejor resultado mediante la funcionalidad de \texttt{checkpoints}, utilizando el conjunto de datos clínicos obtenido del HUBU, se procedió al desarrollo de una aplicación local con el objetivo de facilitar su uso por parte del personal clínico.
 
 La aplicación fue desarrollada con \textit{Streamlit}, una biblioteca de Python que permite la creación de interfaces gráficas de manera sencilla. La versión inicial permitía cargar imágenes de ecografía y visualizar las predicciones de segmentación generadas por el modelo.
@@ -30,13 +30,13 @@ Posteriormente, tras recibir sugerencias del profesional médico colaborador, se
 
 Esta aplicación local permitió ajustar la interfaz en función del uso clínico, situando cada elemento en la disposición más adecuada para una experiencia intuitiva y centrada en el usuario.
 
-\subsection{Proceso de despliegue a la nube.}
+\subsection{Proceso de despliegue a la nube}
 Para el acceso remoto a la herramienta, el modelo fue desplegado en la nube. Para ello, tanto los datos como el modelo y el código fueron subidos al repositorio de GitHub del proyecto \href{https://github.com/eirarodriguez/fetal_brain_segmentation} {fetal\_brain\_segmentation}. 
 
 Posteriormente, utilizando la plataforma \textit{Streamlit Community Cloud}, que permite la ejecución directa del código desde un repositorio, se generó una URL pública que permite el acceso a la aplicación sin necesidad de instalación local, facilitando así su evaluación y uso desde cualquier ubicación.
 
 
-\subsection{Validación del personal clínico.} 
+\subsection{Validación del personal clínico} 
 Se contó con la colaboración de un profesional médico de la unidad de obstetricia, quien participó activamente en la validación de cada una de las etapas del proyecto.
 
 Para validar el modelo de segmentación, se le enviaron los informes generados automáticamente con los resultados obtenidos por cada arquitectura evaluada. 
@@ -45,13 +45,13 @@ Además, se le consultó sobre la relevancia clínica para segmentar el cuarto v
 
 Una vez desarrollada la aplicación, se enviaron al profesional videos explicativos sobre su funcionamiento. Finalmente, tras incorporar todas las funcionalidades propuestas, se compartió la URL de la versión desplegada, la cual fue revisada y se considera satisfactoria para su uso.
 
-\section{Configuración y parametrización de las técnicas.}
+\section{Configuración y parametrización de las técnicas}
 
 Durante el desarrollo del modelo de segmentación, se ajustaron progresivamente los parámetros y la configuración del entrenamiento con el objetivo de mejorar la precisión sin comprometer la eficiencia computacional ni el cumplimiento clínico del proyecto.
 
 \subsection{Arquitectura y encoder} 
 
-La arquitectura seleccionada fue \texttt{U-Net}, junto con el encoder \texttt{ResNeXt50\_32x4d}, preentrenado en ImageNet. Esta combinación demostró un rendimiento sólido en las pruebas realizadas en el conjunto clínico disponible.
+La arquitectura seleccionada fue \texttt{U-Net}, con el encoder \texttt{ResNeXt50\_32x4d}, preentrenado en ImageNet. Esta combinación demostró un rendimiento sólido en las pruebas realizadas en el conjunto clínico disponible.
 
 \subsection{Función de pérdida}
 Para la optimización del modelo se utilizó la función de pérdida \texttt{DiceLoss} en modo \texttt{multiclass}. Esta función está basada en el coeficiente Dice, una métrica que cuantifica la similitud entre dos conjuntos, en este caso, la máscara predicha y la máscara de referencia.
@@ -61,24 +61,24 @@ También fue configurada para trabajar directamente con los \textit{logits} del 
 \subsection{Parámetros de entrenamiento}
 Los parámetros de entrenamiento se definieron a partir de configuraciones base ampliamente utilizadas en segmentación multiclase con redes convolucionales profundas, partiendo del código de la comunidad oficial de \texttt{segmentation\_models\_pytorch}. Posteriormente, fueron ajustados para adaptarse a las particularidades de las imágenes clínicas en este proyecto.
 \begin{itemize}
-    \item \textbf{Épocas (\texttt{max\_epochs})}: se estableció un límite de 200 épocas como máximo. Este valor alto permite al modelo un entrenamiento profundo, pero se controló mediante \texttt{EarlyStopping} para evitar el sobreajuste, deteniendo el proceso automáticamente si la pérdida no mejoraba en 30 épocas consecutivas. 
+    \item \textbf{Épocas (\texttt{max\_epochs})}: se estableció un límite de 200 épocas como máximo. Este valor alto permite al modelo un entrenamiento profundo, pero se controló mediante \textit{early stopping} para evitar el sobreajuste, deteniendo el proceso automáticamente si la pérdida no mejoraba en 30 épocas consecutivas. 
     \item \textbf{Tamaño del batch (\texttt{Batch size})}: se utilizó un batch size de 1, lo cual es común en tareas de segmentación médica, especialmente cuando se trabaja con imágenes grandes o cuando se dispone de recursos computacionales limitados. Esta configuración permite mantener la carga de memoria dentro de los límites de la GPU utilizada.
-    \item \textbf{Optimizador (Adam)}: Se seleccionó el optimizador \texttt{Adam}, ampliamente adoptado en redes neuronales profundas. Su principal ventaja es que adapta la tasa de aprendizaje de forma individual para cada parámetro, lo que la hace especialmente útil en escenarios con ruido o desbalances entre clases, como lo son las ecografías médicas.
-    \item \textbf{Tasa de aprendizaje (\texttt{learning rate})}: Se fijó un valor inicial de 0,0002. Este valor moderadamente bajo favorece una convergencia estable, especialmente en los primeros pasos del entrenamiento. 
-    \item \textbf{Scheduler}: Se aplicó un scheduler de tipo coseno, que reduce progresivamente la tasa de aprendizaje hasta un mínimo de 0,00001. Esta estrategia ayuda a refinar los pesos del modelo en fases avanzadas del entrenamiento, evitando que quede atrapado en mínimos poco óptimos.
+    \item \textbf{Optimizador (Adam)}: se seleccionó el optimizador \texttt{Adam}, ampliamente adoptado en redes neuronales profundas. Su principal ventaja es que adapta la tasa de aprendizaje de forma individual para cada parámetro, lo que la hace especialmente útil en escenarios con ruido o desbalances entre clases, como lo son las ecografías médicas.
+    \item \textbf{Tasa de aprendizaje (\texttt{learning rate})}: se estableció un valor inicial de 0,0002. Este valor moderadamente bajo favorece una convergencia estable, especialmente en los primeros pasos del entrenamiento. 
+    \item \textbf{Scheduler}: se aplicó un scheduler de tipo coseno, configurado con un valor mínimo de tasa de aprendizaje de 0,00001 y un ciclo de 50 épocas. Esta estrategia ayuda a refinar los pesos del modelo en fases avanzadas del entrenamiento, evitando que quede atrapado en mínimos poco óptimos.
 \end{itemize}
 \subsection{Callbacks de entrenamiento}
 \begin{itemize}
-    \item \textbf{EarlyStopping}: Se utilizó con una paciencia de 30 épocas, monitorizando la pérdida de validación. Esta estrategia permitió evitar sobreajuste y reducir el tiempo de entrenamiento.
-     \item \textbf{ModelCheckpoint}: Se guardó automáticamente el modelo con la menor pérdida de validación registrada durante el entrenamiento, facilitando su posterior evaluación y despliegue.
+    \item \textbf{Early stopping}: se utilizó con una paciencia de 30 épocas, monitorizando la pérdida de validación. Esta estrategia permitió evitar sobreajuste y reducir el tiempo de entrenamiento.
+     \item \textbf{Model checkpoint}: se guardó automáticamente el modelo con la menor pérdida de validación registrada durante el entrenamiento, facilitando su posterior evaluación y despliegue.
 \end{itemize}
 \subsection{Augmentaciones y reprocesamiento}
 Para mejorar la capacidad de generalización del modelo, se aplicaron técnicas de \textit{data aumentation} durante el entrenamiento, incluyendo rotaciones, desplazamientos, ajustes de brillo y contraste, así como normalización. Durante la validación y prueba, se utilizó únicamente la normalización estándar.
 
-\section{Detalle de resultados.}
+\section{Detalle de resultados}
 En la carpeta de Resultados, disponible en el repositorio de GitHub del proyecto, se incluyeron los informes generados sobre el conjunto de prueba. Cada informe contiene:
 \begin{itemize}
-    \item Cuatro imágenes de prueba, con su ground truth y la segmentación predicha por el modelo.
+    \item Cuatro imágenes de prueba, con su \textit{ground truth} y la segmentación predicha por el modelo.
     \item Una tabla con métricas por clase (precisión e IoU).
     \item El promedio de estas métricas para cada imagen.
     \item La evolución de la función de pérdida durante el entrenamiento.
@@ -123,21 +123,21 @@ En las Figuras \ref{fig:comparacion_unet}, \ref{fig:comparacion_linknet} y \ref{
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{img/image1_unet.png}
-    \caption{Comparación visual de la segmentación generada por U-Net. De izquierda a derecha: imagen original, ground truth, predicción del modelo. }
+    \caption{Comparación visual de la segmentación generada por U-Net. De izquierda a derecha: imagen original, \textit{ground truth}, predicción del modelo. }
     \label{fig:comparacion_unet}
 \end{figure}
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{img/image1_linknet.png}
-    \caption{Comparación visual de la segmentación generada por LinkNet. De izquierda a derecha: imagen original, ground truth, predicción del modelo.}
+    \caption{Comparación visual de la segmentación generada por LinkNet. De izquierda a derecha: imagen original, \textit{ground truth}, predicción del modelo.}
     \label{fig:comparacion_linknet}
 \end{figure}
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{img/image1_pspnet.png}
-    \caption{Comparación visual de la segmentación generada por PSPNet. De izquierda a derecha: imagen original, ground truth, predicción del modelo.}
+    \caption{Comparación visual de la segmentación generada por PSPNet. De izquierda a derecha: imagen original, \textit{ground truth}, predicción del modelo.}
     \label{fig:comparacion_pspnet}
 \end{figure}
 
@@ -168,29 +168,29 @@ Las visualizaciones adicionales incluidas en las Figuras \ref{fig:comparacion_un
     \label{fig:comparacion_unet4}
 \end{figure}
 
-Como parte del resultado final del proyecto, se desarrolló una interfaz que permite al personal clínico cargar imágenes de ecografía, visualizar las segmentaciones generadas por el modelo, consultar la máscara ground truth cuando está disponible y generar automáticamente informes en formato PDF.
+Como parte del resultado final del proyecto, se desarrolló una interfaz que permite al personal clínico cargar imágenes de ecografía, visualizar las segmentaciones generadas por el modelo, consultar la máscara \textit{ground truth} cuando está disponible y generar automáticamente informes en formato PDF.
 
 Esta interfaz fue desarrollada inicialmente en \textit{Streamlit} y posteriormente desplegada en la nube mediante \textit{Streamlit Community Cloud}, permitiendo su uso sin necesidad de instalaciones locales. La herramienta está disponible en el siguiente enlace: \url{https://fetalbrainsegmentation.streamlit.app/}.
 
-Las Figuras \ref{fig:subir_imagen}, \ref{fig: visualizar_segmentación}, \ref{fig: generar_informe} muestran capturas de pantalla representativas de la aplicación:
+Las Figuras \ref{fig:subir_imagenG}, \ref{fig:visualizar_segmentaciónG}, \ref{fig:generar_informeG} muestran capturas de pantalla representativas de la aplicación.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{img/interfaz_subir_imagen.png}
     \caption{Cargar imagen médica.}
-    \label{fig:subir_imagen}
+    \label{fig:subir_imagenG}
 \end{figure}
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{img/interfaz_visualización.png}
     \caption{Visualizar segmentación automática.}
-    \label{fig: visualizar_segmentación}
+    \label{fig:visualizar_segmentaciónG}
 \end{figure}
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{img/interfaz_generar_informe.png}
     \caption{Generar informe.}
-    \label{fig: generar_informe}
+    \label{fig:generar_informeG}
 \end{figure}

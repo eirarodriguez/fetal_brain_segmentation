@@ -53,17 +53,17 @@ Esta sección presenta la explicación de los casos de uso del sistema. En cada 
 		\textbf{Requisitos asociados} & RF-02 \\
         \textbf{Actor}                & Médico \\
 		\textbf{Descripción}          & El sistema genera la segmentación automática y la muestra junto a la original.\\
-		\textbf{Precondición}         & Se ha cargado correctamente una imagen médica que corresponda a una ecografía del cerebro fetal \\
+		\textbf{Precondición}         & Se ha cargado correctamente una imagen médica que corresponda a una ecografía del cerebro fetal. \\
 		\textbf{Acciones}             &
 		\begin{enumerate}
 			\def\labelenumi{\arabic{enumi}.}
 			\tightlist
 			\item El sistema procesa automáticamente la imagen.
 			\item Se ejecuta el modelo de segmentación.
-            \item Se muestra el resultado en la interfaz
+            \item Se muestra el resultado en la interfaz.
 		\end{enumerate}\\
 		\textbf{Postcondición}        & El médico visualiza el resultado y puede interpretarlo. \\
-		\textbf{Excepciones}          & Error en la predicción o visualización \\
+		\textbf{Excepciones}          & Error en la predicción o visualización. \\
 		\textbf{Importancia}          & Alta \\
 		\bottomrule
 	\end{tabularx}
@@ -88,10 +88,10 @@ Esta sección presenta la explicación de los casos de uso del sistema. En cada 
 			\tightlist
 			\item El usuario introduce los datos del paciente.
 			\item El sistema genera el informe con la imagen original y la predicción.
-            \item El usuario descarga el archivo PDF
+            \item El usuario descarga el archivo PDF.
 		\end{enumerate}\\
 		\textbf{Postcondición}        & El informe queda guardado localmente. \\
-		\textbf{Excepciones}          & Error al generar o guardar el archivo \\
+		\textbf{Excepciones}          & Error al generar o guardar el archivo. \\
 		\textbf{Importancia}          & Alta \\
 		\bottomrule
 	\end{tabularx}
@@ -144,7 +144,7 @@ Esta sección presenta la explicación de los casos de uso del sistema. En cada 
 			\tightlist
 			\item Se carga el conjunto de datos segmentado.
 			\item Se define el modelo y los hiperparámetros.
-            \item Se entrena con callbacks como early stoping.
+            \item Se entrena con callbacks como \textit{early stopping}.
 		\end{enumerate}\\
 		\textbf{Postcondición}        & Modelo entrenado y guardado. \\
 		\textbf{Excepciones}          & Fallos en entrenamiento. \\
@@ -158,7 +158,7 @@ Esta sección presenta la explicación de los casos de uso del sistema. En cada 
 	\centering
 	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
 		\toprule
-		\textbf{CU-6}    & \textbf{Evaluar rendimiento del modelo.}\\
+		\textbf{CU-6}    & \textbf{Evaluar rendimiento del modelo}\\
 		\toprule
 		\textbf{Versión}              & 1.0    \\
 		\textbf{Autor}                & Eira Rodríguez Martín \\
@@ -211,26 +211,26 @@ Esta sección presenta la explicación de los casos de uso del sistema. En cada 
 	\caption{CU-7 Desarrollar interfaz médica.}
 \end{table}
 \FloatBarrier
-\section{Prototipos de interfaz o interacción con el proyecto.}
+\section{Prototipos de interfaz o interacción con el proyecto}
 
 La interfaz desarrollada para este proyecto tiene como objetivo principal facilitar el uso de la herramienta por parte del personal médico, ofreciendo una experiencia intuitiva y visualmente clara. 
 
-En la Figura \ref{fig: subir_imagen} se muestra la forma de subir una imagen médica mediante el botón \textit{"Browse files"}.
+En la Figura \ref{fig:subir_imagen} se muestra la forma de subir una imagen médica mediante el botón \textit{"Browse files"}.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{img/interfaz_subir_imagen.png}
     \caption{Cargar imagen médica.}
-    \label{fig: subir_imagen}
+    \label{fig:subir_imagen}
 \end{figure}
 
-La Figura \ref{fig: visualizar_segmentación} muestra cómo se visualizan la imagen original y la imagen tras la segmentación automática.
+La Figura \ref{fig:visualizar_segmentación} muestra cómo se visualizan la imagen original y la imagen tras la segmentación automática.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{img/interfaz_visualización.png}
     \caption{Visualizar segmentación automática.}
-    \label{fig: visualizar_segmentación}
+    \label{fig:visualizar_segmentación}
 \end{figure}
 
 En la Figura \ref{fig: generar_informe} podemos observar la posibilidad de rellenar la información del paciente y generar el informe.

@@ -5,23 +5,23 @@
 El proyecto se entrega organizado en una carpeta principal denominada \texttt{fetal\_brain\_segmentation}, que contiene todos los archivos y subdirectorios necesarios para su ejecución y análisis. A continuación, se describe el contenido y propósito de cada uno de los elementos incluidos:
 
 \begin{itemize}
-    \item \textbf{data}: Carpeta que contiene las imágenes utilizadas para el entrenamiento, validación y prueba del modelo. También incluye el archivo \texttt{\_annotations.coco.json}, que recoge las anotaciones en formato COCO utilizadas para generar las máscaras ground truth.
-    \item \textbf{Ejemplos}: Contiene varios notebooks de ejemplo para el entrenamiento del modelo con diferentes configuraciones. Está organizada en tres carpetas, cada una correspondiente a una estrategia específica. En cada una se incluyen implementaciones de diferentes arquitecturas de segmentación:
+    \item \textbf{data}: carpeta que contiene las imágenes utilizadas para el entrenamiento, validación y prueba del modelo. También incluye el archivo \texttt{\_annotations.coco.json}, que recoge las anotaciones en formato COCO utilizadas para generar las máscaras \textit{ground truth}.
+    \item \textbf{Ejemplos}: contiene varios notebooks de ejemplo para el entrenamiento del modelo con diferentes configuraciones. Está organizada en tres carpetas, cada una correspondiente a una estrategia específica. En cada una se incluyen implementaciones de diferentes arquitecturas de segmentación:
     \begin{itemize}
-        \item \texttt{train\_basico/}: Entrenamiento técnicas adicionales, útil como línea base para comparación.
-        \item \texttt{data\_augmentation/}: Incluye ejemplos con técnicas de aumento de datos aplicadas para mejorar la capacidad de generalización del modelo. En esta carpeta se encuentran archivos \texttt{.py} y \texttt{.ipynb} para distintas arquitecturas.
-        \item \texttt{early\_stopping/}: Añade la técnica de parada temprana early stopping a las configuraciones anteriores, con el objetivo de evitar el sobreajuste. También se organiza por arquitecturas y tipo de archivo.
-
-    En todas las subcarpetas se encuentran ejemplos de entrenamiento para modelos como U-Net, U-Net++, FPN, LinkNet, MANet y PSPNet 
+        \item \texttt{train\_basico/}: entrenamiento técnicas adicionales, útil como línea base para comparación.
+        \item \texttt{data\_augmentation/}: incluye ejemplos con técnicas de aumento de datos aplicadas para mejorar la capacidad de generalización del modelo. En esta carpeta se encuentran archivos \texttt{.py} y \texttt{.ipynb} para distintas arquitecturas.
+        \item \texttt{early\_stopping/}: añade la técnica de parada temprana \textit{early stopping} a las configuraciones anteriores, con el objetivo de evitar el sobreajuste. También se organiza por arquitecturas y tipo de archivo.
     \end{itemize}
-    \item \textbf{Resultados}: Estructurada igual que la carpeta \texttt{Ejemplos}, contiene los resultados de cada entrenamiento. Dentro de cada subcarpeta (\texttt{train\_basico}, \texttt{data\_augmentation}, \texttt{early\_stopping}) se recopilan los análisis cuantitativos (métricas como IoU y precisión) y cualitativos (visualización de segmentaciones) generados por los modelos correspondientes. Además, incluye el informe base, que contiene los marcadores utilizados para sustituir las imágenes y recoger las métricas obtenidas durante el entrenamiento.
-    \item \textbf{Estado del arte}: Directorio con los artículos científicos utilizados como referencia para redactar el apartado teórico del trabajo. Algunos de los artículos consultados no han podido ser descargados. 
+    En todas las subcarpetas se encuentran ejemplos de entrenamiento para modelos como U-Net, U-Net++, FPN, LinkNet, MANet y PSPNet.
+    
+    \item \textbf{Resultados}: estructurada igual que la carpeta \texttt{Ejemplos}, contiene los resultados de cada entrenamiento. Dentro de cada subcarpeta (\texttt{train\_basico}, \texttt{data\_augmentation}, \texttt{early\_stopping}) se recopilan los análisis cuantitativos (métricas como IoU y precisión) y cualitativos (visualización de segmentaciones) generados por los modelos correspondientes. Además, incluye el informe base, que contiene los marcadores utilizados para sustituir las imágenes y recoger las métricas obtenidas durante el entrenamiento.
+    \item \textbf{Estado\_del\_arte}: directorio con los artículos científicos utilizados como referencia para redactar el apartado teórico del trabajo. Algunos de los artículos consultados no han podido ser descargados. 
     \item \textbf{Modelo}: Carpeta que contiene el archivo de pesos del modelo final entrenado (.pth). Este modelo es el utilizado por la aplicación de inferencia para generar las segmentaciones automáticas.
-    \item \textbf{app.py}: \textit{Script} principal de la aplicación desplegable mediante Streamlit. Permite cargar una imagen ecográfica, aplicar segmentación automática y mostrar los resultados junto con la máscara real si está disponible.
-    \item \textbf{\texttt{LICENSE}}: Archivo de licencia del proyecto, donde se especifican los términos legales de uso, modificación y distribución del código.
-    \item \textbf{\texttt{README.md}}: Documento de introducción al proyecto, donde se explican las instrucciones básicas de uso, instalación y ejecución.
-    \item \textbf{Memoria TFG}: Carpeta que contiene los archivos y carpetas para poder ejecutar tanto la memoria como los anexos en LaTeX. 
-    \item \textbf{requirements.txt}: Archivo con la lista de dependencias del proyecto. Contiene los paquetes de Python necesarios para ejecutar tanto el entrenamiento de modelos como la aplicación de inferencia. 
+    \item \textbf{app.py}: \texit{script} principal de la aplicación desplegable mediante Streamlit. Permite cargar una imagen ecográfica, aplicar segmentación automática y mostrar los resultados junto con la máscara real si está disponible.
+    \item \textbf{\texttt{LICENSE}}: archivo de licencia del proyecto, donde se especifican los términos legales de uso, modificación y distribución del código.
+    \item \textbf{\texttt{README.md}}: documento de introducción al proyecto, donde se explican las instrucciones básicas de uso, instalación y ejecución.
+    \item \textbf{Memoria\_TFG}: carpeta que contiene los archivos y carpetas para poder ejecutar tanto la memoria como los anexos en LaTeX. 
+    \item \textbf{requirements.txt}: archivo con la lista de dependencias del proyecto. Contiene los paquetes de Python necesarios para ejecutar tanto el entrenamiento de modelos como la aplicación de inferencia. 
 \end{itemize}  
 
 \section{Compilación, instalación y ejecución del proyecto}

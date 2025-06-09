@@ -6,110 +6,144 @@ La planificación del proyecto se ha llevado a cabo siguiendo una estructura cla
 
 \section{Planificación temporal}
 
-Para la planificación temporal del proyecto, se seleccionó GitHub Issues junto con una metodología  CRISP-DM (CRoss Industry Standard Process for Data Mining) \cite{crispdm2021}. Esta metodología ágil, ampliamente aplicada en la minería de datos y otros ámbitos relacionados, ha permitido una gestión estructurada del proyecto. Su utilización en conjunto con GitHub Issues ha facilitado la creación de tareas, el seguimiento del progreso y la generación de una comunicación entre los pasos para alcanzar el objetivo.
+Para la planificación temporal del proyecto, se seleccionó GitHub Issues junto con una metodología  CRISP-DM (CRoss Industry Standard Process for Data Mining) \cite{crispdm2021}, complementada con el uso de GitHub Issues. Esta combinación permitió estructurar de forma clara tanto el desarrollo técnico como documental del proyecto, facilitando su seguimiento. El proyecto se organizó en quince sprints, con una duración de dos semanas cada uno. Dentro de cada sprint se definieron diferentes \textit{issues}, etiquetadas con \textit{labels} representativos de la fase de CRISP-DM a la que pertenece cada tarea.
+ 
 
-El desarrollo del proyecto se estructuró en seis sprints, cada uno alineado con las fases clave de la metodología CRISP-DM, desde la comprensión inicial hasta el despliegue final.
-
-\subsection{Sprint 1: Comprensión del Negocio}
-
-Fecha : 28/10/2024 - 03/02/2025
-
-En esta fase inicial, se buscó comprender los objetivos clave del proyecto y el problema clínico a abordar, sentando las bases para el futuro trabajo.
-
-Este sprint se dividió en 5 issues explicadas a continuación:
+\subsection{Sprint 1}
+Fecha: 29/11/2024 - 12/11/2024
 
 \begin{itemize}
-    \item \textbf{Definición del objetivo del proyecto:} Se llevaron a cabo múltiples reuniones con los tutores académicos y el obstetra. El objetivo fue comprender los requisitos clínicos, los recursos disponibles y definir el propósito central del proyecto. Durante estas sesiones se discutieron aspectos como las necesidades clínicas que el proyecto busca  abordar, las imágenes disponibles y su calidad, así como las posibles limitaciones que podrían surgir.
-    \item \textbf{Documentación bibliográfica inicial:} Recopilación y análisis exhaustivo de artículos científicos relacionados con la segmentación de imágenes medicas mediante \textit{deep learning}, con el fin de identificar los métodos y arquitecturas más adecuadas para el proyecto.
-    \item \textbf{Importación de plantilla LaTeX en Overleaf:} Esta tarea consistió en la descarga de la plantilla oficial de LaTeX desde el repositorio GitHub del Grado en Ingeniería de la Salud. Posteriormente, se importó en Overleaf y se llevó a cabo una investigación sobre el uso y las funcionalidades de la herramienta para la redacción de la Memoria.
-    \item \textbf{Redacción del documento del Comité de Ética:} Esta tarea consistió en la elaboración del documento necesario para obtener la autorización y el acceso a las imágenes de ultrasonido 2D del área de Ginecología del Hospital Universitario de Burgos, esenciales para el desarrollo del proyecto. Antes de su aprobación final, se realizaron modificaciones para aclarar aspectos solicitados por el comité. 
-    \item \textbf{Investigación de Técnicas de Deep Learning para Segmentación de Imágenes:} Se llevó a cabo un estudio exhaustivo sobre la aplicación de \textit{deep learning} en la segmentación de imágenes médicas, recopilando información relevante para identificar las técnicas más adecuadas y establecer una base teórica sólida para la implementación del proyecto.
+    \item \textbf{Definición del objetivo del proyecto:} se llevaron a cabo múltiples reuniones con los tutores académicos y el obstetra. El objetivo fue comprender los requisitos clínicos, los recursos disponibles y definir el propósito central del proyecto. Durante estas sesiones se discutieron aspectos como las necesidades clínicas que el proyecto busca abordar, las imágenes disponibles y su calidad, así como las posibles limitaciones que podrían surgir.
+
+    \item \textbf{Importación de plantilla LaTeX en Overleaf:} esta tarea consistió en la descarga de la plantilla oficial de LaTeX desde el repositorio GitHub del Grado en Ingeniería de la Salud. Posteriormente, se importó en Overleaf y se llevó a cabo una investigación sobre el uso y las funcionalidades de la herramienta para la redacción de la Memoria.
+    
 \end{itemize}
 
-\subsection{Sprint 2: Comprensión de los Datos}
-
-Fecha : 15/11/2024 - 03/04/2025
-
-Este sprint se centró en el análisis exploratorio de los datos iniciales y la selección de herramientas para su gestión, determinando la idoneidad de las imágenes para el proyecto.
-
-Se divide en 3 issues explicadas a continuación:
+\subsection{Sprint 2}
+Fecha: 12/11/2024 - 26/11/2024
 \begin{itemize}
-    \item \textbf{Revisión de imágenes proporcionadas}: Antes de iniciar el procesamiento, se revisaron las imágenes ultrasonido disponibles para evaluar su calidad y observar la visibilidad de las estructuras anatómicas que se deseaban segmentar.
-    \item \textbf{Evaluación de herramientas para gestión de datos anotados}: Se analizaron diversas opciones de software para gestionar y explorar las imágenes y anotaciones. Inicialmente se consideró VGG Image Annotator (VIA), pero posteriormente se determinó que Roboflow ofrecía una solución más completa y adaptable a los cambios previstos en el proyecto, especialmente en la versión de los conjuntos de datos.
-    \item \textbf{Pruebas de visualización}: Se desarrolló un script en Python capaz de cargar y visualizar las imágenes de ultrasonido, adaptando su lectura al formato específico de los datos proporcionados para asegurar una correcta interpretación.
+    \item \textbf{Documentación bibliográfica inicial:} recopilación y análisis exhaustivo de artículos científicos relacionados con la segmentación de imágenes médicas mediante \textit{deep learning}, con el fin de identificar los métodos y arquitecturas más adecuadas para el proyecto.
+    \item \textbf{Redacción del documento del Comité de Ética:} esta tarea consistió en la elaboración del documento necesario para obtener la autorización y el acceso a las imágenes de ultrasonido 2D del área de Ginecología del Hospital Universitario de Burgos, esenciales para el desarrollo del proyecto. 
 \end{itemize}
 
-\subsection{Sprint 3: Preparación de los Datos}
-
-Fecha : 28/10/2024 - 28/04/2025
-
-Durante este sprint, se realizó la preparación y transformación de los datos para adaptarlos al formato requerido por los modelos de \textit{deep learning}
-
-Este sprint se dividió en 4 issues explicadas a continuación:
+\subsection{Sprint 3}
+Fecha: 26/11/2024 - 10/12/2024
 \begin{itemize}
-    \item \textbf{Crear imagen Ground Truth:} Se llevó a cabo un proceso de anotación manual utilizando la herramienta VGG Image Annotator (VIA), con el objetivo de generar máscaras de referencia (ground truth) para el entrenamiento y evaluación de los modelos de segmentación. Esta tarea consistió en delimitar con precisión las regiones anatómicas de interés en las ecografías fetales. 
-    \item \textbf{Crear la máscara de las máscaras Groundtruth a partir de un JSON:} A partir de los archivos generados en VIA en formato JSON, se desarrolló un script en Python que extrae las coordenadas de los polígonos anotados y asigna un color específico a cada clase según un diccionario predefinido. Como resultado, se generan máscaras segmentadas codificadas por clase, que son almacenadas en el directorio de salida para su posterior uso en el entrenamiento.
-
-    Con el nuevo uso de Roboflow, se genera un único archivo en formato COCO que centraliza las anotaciones de todo el conjunto de imágenes en lugar de que cada imagen, en lugar de contar con un archivo JSON por cada imagen. Esto requirió adaptar el script para recorrer el JSON global y generar las máscaras correspondientes para cada imagen.
-    \item \textbf{Generación de imágenes Ground Truth con Roboflow:} Tras probar distintas arquitecturas de \textit{deep learning}, se detectó la necesidad de reorganizar los archivos de anotaciones en formato JSON. Roboflow se utilizó como herramienta de gestión, ya que permitía versionar el conjunto de datos, mantener organizadas tanto las imágenes originales como sus máscaras correspondientes, y exportar anotaciones de múltiples formatos, incluyendo COCO, que fue el seleccionado para este proyecto.
-    \item \textbf{Reestructuración de las clases a segmentar:} A partir del análisis de los primeros entrenamientos, se observó un bajo rendimiento en la segmentación del cuarto ventrículo. Por ello, se optó por eliminar dicha clase y centrar el modelo en aquellas estructuras con mayor interés clínico. Además, se unificaron los hemisferios del cerebelo (inicialmente tratadas como dos clases separadas) en una sola clase, lo que contribuyó a simplificar el problema y mejorar los resultados obtenidos. 
+    \item \textbf{Redacción del documento del Comité de Ética:} continuar con el \textit{issue}. 
+    \item \textbf{Revisión de imágenes proporcionadas:} antes de iniciar el procesamiento, se revisaron las imágenes ultrasonido disponibles para evaluar su calidad y observar la visibilidad de las estructuras anatómicas que se deseaban segmentar.
+    \item \textbf{Evaluación de herramientas para gestión de datos anotados:} se analizaron diversas opciones de software para gestionar y explorar las imágenes y anotaciones. Inicialmente se consideró VGG Image Annotator (VIA).
+    \item \textbf{Crear imagen \textit{ground truth} con VIA:} se llevó a cabo un proceso de anotación manual utilizando la herramienta VGG Image Annotator (VIA), con el objetivo de generar máscaras de referencia (\textit{ground truth}) para el entrenamiento y evaluación de los modelos de segmentación. Esta tarea consistió en delimitar con precisión las regiones anatómicas de interés en las ecografías fetales.
 \end{itemize}
 
-\subsection{Sprint 4: Modelado}
-
-Fecha : 18/01/2025 - 29/04/2025
-
-En este sprint, se exploraron y aplicaron diversas técnicas de modelado para identificar y optimizar las arquitecturas más efectivas en la detección de las estructuras cerebelosas.
-
-Este sprint se divide en 7 issues explicadas a continuación:
+\subsection{Sprint 4}
+Fechas: 10/12/2024 - 24/12/2024
 \begin{itemize}
-    \item \textbf{Implementación de métodos tradicionales de segmentación:} Al inicio del proyecto se exploraron técnicas clásicas de segmentación, como K-means y contornos activos, con el objetivo de establecer una línea de base y comprender la complejidad del problema. Sus limitaciones a la hora de capturar detalles anatómicos precisos motivaron el uso de modelos basados en aprendizaje profundo.
-    \item \textbf{Segmentación de Deep Learning utilizando YOLOv11 y DeepLabV3+:} La primera aproximación con modelos de \textit{deep learning} incluyó la implementación de YOLOv11, adaptado para tareas de segmentación, y DeepLabV3+, conocido por su rendimiento en segmentación semántica. Sin embargo, estos modelos no ofrecieron resultados satisfactorios en el contexto del proyecto, lo que llevó a explorar arquitecturas alternativas.
-    \item \textbf{Segmentación de Deep Learning utilizando SAM:} Se evaluó el modelo Segment Anything Model (SAM). Si bien SAM mostró un rendimiento aceptable en la segmentación general del cerebro, su precisión fue limitada al intentar distinguir múltiples clases específicas del cerebelo. Esto motivó la decisión de priorizar otros modelos más especializados. 
-    \item \textbf{Segmentación de Deep Learning utilizando el repositorio segmentation\_models.pytorch:} Se empleó la biblioteca segmentation\_models.pytorch, que permite implementar múltiples arquitecturas de segmentación como U-Net, U-Net++, FPN, entre otras, con una estructura de código unificada. Esta herramienta facilitó la compración entre modelos y el ajuste eficiente de hiperparámetros. La biblioteca se usó la base del \textit{pipeline} final del proyecto.
-    \item \textbf{Implementación de Data Augmentation en el proceso de entrenamiento}: Con el objetivo de enriquecer el conjunto de datos de entrenamiento y mejorar la robustez del modelo frente a variaciones en las imágenes de entrada, se implementaron técnicas de aumento de datos (\textit{Data Augmentation}). Esto incluyó rotaciones aleatorias, cambios de escala y ajuste de contraste, aplicadas a las imágenes durante el entrenamiento.
-    \item \textbf{Implementación de EarlyStopping en el proceso de entrenamiento:} Para evitar el sobreajuste, se integró la técnica de EarlyStopping, que permitió finalizar automáticamente el entrenamiento cuando la métrica de validación dejaba de mejorar durante varias épocas consecutivas.
-    \item \textbf{Ajuste en la configuración del modelo y entrenamiento:} Se realizaron ajustes iterativos en la configuración de los modelos y parámetros de entrenamiento, incluyendo la optimización del número de épocas, la función de pérdida y el tamaño del \textit{batch}, con el fin de maximizar el rendimiento del modelo final.
-\end{itemize}
-\subsection{Sprint 5: Evaluación}
+    \item \textbf{Revisión de imágenes proporcionadas:} continuar con el \textit{issue}.
+    \item \textbf{Evaluación de herramientas para gestión de datos anotados:} continuar con el \textit{issue}.
+    \item \textbf{Crear imagen \textit{ground truth} con VIA:} continuar con el \textit{issue}.
+    \item \textbf{Pruebas de visualización:} se desarrolló un script en Python capaz de cargar y visualizar las imágenes de ultrasonido, adaptando su lectura al formato específico de los datos proporcionados para asegurar una correcta interpretación. La carga ha sido menor que la estimada.
+    \item \textbf{Crear la máscara de las máscaras \textit{ground truth} a partir de un JSON:} a partir de los archivos generados en VIA en formato JSON, se desarrolló un script en Python que extrae las coordenadas de los polígonos anotados y asigna un color específico a cada clase según un diccionario predefinido. Como resultado, se generan máscaras segmentadas codificadas por clase, que son almacenadas en el directorio de salida para su posterior uso en el entrenamiento. La carga ha sido la estimada.
+\end{itemize}   
 
-Fecha : 14/04/2025 - 22/05/2025
-
-Este sprint se centró en la evaluación sistemática del modelo final, con el objetivo de comprobar el rendimiento de las estructuras seleccionadas y validar su idoneidad para el caso clínico.
-Este sprint se divide en 3 issues explicadas a continuación:
+\subsection{Sprint 5}
+Fechas: 07/01/2025 - 21/01/2025
 \begin{itemize}
-    \item \textbf{Crear un informe sobre los resultados del proyecto:} Se organizaron los resultados obtenidos tras las distintas pruebas realizadas con los modelos de segmentación. Se generó un informe inicial que cambiaría los resultados según la arquitectura con la que estuviésemos trabajando. Se incluyeron resultados visuales y cualitativos basados en los errores y aciertos del modelo. 
-    \item \textbf{Evaluación del rendimiento de los modelos:} Se analizaron diferentes métricas como la IoU (Intersection over Union) media por clase y la precisión global, así como un análisis visual de las máscaras segmentadas frente a la ground truth. Este análisis permitió identificar qué arquitectura era la más adecuada para nuestro proyecto justificando su selección.
-    \item \textbf{Redacción final del informe final de resultados:} Se documentaron de forma estructurada todos los resultados obtenidos. Esto incluyó tablas comparativas, gráficas de rendimiento y ejemplos visuales representativos de las segmentaciones. Esta tarea se enfocó en la preparación del contenido para el capítulo de resultados.
-    \item \textbf{Redacción del documento Memoria:} Elaboración del documento principal del Trabajo de Fin de Grado, que incluye la introducción del problema, los objetivos, el marco teórico, la metodología empleada los resultados obtenidos, el desarrollo de la solución propuesta, las conclusiones extraídas y las posibles líneas futuras de trabajo.
+    \item \textbf{Redacción del documento del Comité de Ética:} se realizaron modificaciones en el documento del proyecto que respondían a aclaraciones que el CEIM requería.
+    \item \textbf{Implementación de métodos tradicionales de segmentación:} al inicio del proyecto se exploraron técnicas clásicas de segmentación, como \textit{K-means} y contornos activos, con el objetivo de establecer una línea de base y comprender la complejidad del problema. Sus limitaciones a la hora de capturar detalles anatómicos precisos motivaron el uso de modelos basados en aprendizaje profundo.
+    \item \textbf{Investigación de técnicas de \textit{deep learning} para segmentación de imágenes:} se llevó a cabo un estudio exhaustivo sobre la aplicación de \textit{deep learning} en la segmentación de imágenes médicas.
 \end{itemize}
 
-\subsection{Sprint 6: Implementación}
-
-Fecha : 25/04/2025 - 08/06/2025
-
-El último sprint del proyecto se enfocó en la creación de una interfaz accesible para profesionales médicos y la documentación técnica del código y uso de la aplicación.
-
-Este sprint se divide en 5 issues explicadas a continuación:
+\subsection{Sprint 6}
+Fechas: 21/01/2025 - 04/02/2025
 \begin{itemize}
-    \item \textbf{Implementación de una aplicación:} Se diseñó e implementó una interfaz gráfica sencilla utilizando la biblioteca de Streamlit, pensada para que los profesionales clínicos pudieran utilizar la segmentación sin necesidad de conocimientos técnicos. La aplicación permite cargar una imagen ecográfica y obtener la máscara segmentada de forma automática.
-    \item \textbf{Implementación de funcionalidades extra en la interfaz:} Se añadieron funcionalidades adicionales, como la visualización de la ground truth si está disponible y sus métricas, una leyenda con las clases segmentadas y la posibilidad de descargar un PDF con formato de informe médico que contiene los resultados. 
-    \item \textbf{Subida del proyecto a GitHub:} Todo el conjunto de datos, el modelo entrenado y el código de la aplicación fueron organizados y subidos al repositorio público del proyecto en GitHub. 
-    \item \textbf{Despliegue de la aplicación en Streamlit Community Cloud:} Para permitir el acceso remoto a la aplicación sin necesidad de instalación, se publicó en Streamlit Community Cloud. Esta plataforma permite que cualquier usuario con conexión a Internet acceda a la aplicación a través del navegador, disponible en la URL: \url{https://fetalbrainsegmentation.streamlit.app/}
-    \item \textbf{Redacción del README.md}: Se redactó un archivo README.md detallado para el repositorio de GitHub. Incluye una descripción del proyecto, instrucciones de instalación y ejecución local.
-    \item \textbf{Redacción de Anexos:} Preparación y estructuración de los anexos, donde se incluirán los materiales complementarios como  la planificación, el manual para el usuario, el manual del programador, la descripción de los datos y el diseño del proyecto.
+    \item \textbf{Segmentación de \textit{deep learning} utilizando YOLOv11 y DeepLabV3+:} la primera aproximación con modelos de \textit{deep learning} incluyó la implementación de YOLOv11, adaptado para tareas de segmentación, y DeepLabV3+, conocido por su rendimiento en segmentación semántica. Sin embargo, estos modelos no ofrecieron resultados satisfactorios en el contexto del proyecto, lo que llevó a explorar arquitecturas alternativas. La carga estimada ha sido mayor a la estimada.
 \end{itemize}
+
+\subsection{Sprint 7}
+Fechas:04/02/2025 - 18/02/2025
+\begin{itemize}
+    \item \textbf{Segmentación de \textit{deep learning} utilizando SAM:} se evaluó el modelo Segment Anything Model (SAM). Si bien SAM mostró un rendimiento aceptable en la segmentación general del cerebro, su precisión fue limitada al intentar distinguir múltiples clases específicas del cerebelo. Esto motivó la decisión de priorizar otros modelos más especializados. La carga estimada ha sido mayor a la estimada.
+\end{itemize}
+
+\subsection{Sprint 8}
+Fechas: 18/02/2025 - 04/03/2025
+\begin{itemize}
+    \item \textbf{Evaluación de herramientas para gestión de datos anotados:} tras probar distintas arquitecturas de \textit{deep learning}, se detectó la necesidad de reorganizar los archivos de anotaciones en formato JSON. Se planteó la utilización de Roboflow, ya que permitía versionar el conjunto de datos, mantener organizadas tanto las imágenes originales como sus máscaras correspondientes, y exportar anotaciones de múltiples formatos, incluyendo COCO, que fue el seleccionado para este proyecto.
+    \item \textbf{Generación de imágenes \textit{ground truth} con Roboflow:} se generaron de nuevo las imágenes \textit{ground truth} desde la plataforma de Roboflow.
+    \item \textbf{Crear la máscara de las máscaras \textit{ground truth} a partir de un JSON:} con el nuevo uso de Roboflow, se genera un único archivo en formato COCO que centraliza las anotaciones de todo el conjunto de imágenes en lugar de que cada imagen, en lugar de contar con un archivo JSON por cada imagen. Esto requirió adaptar el script para recorrer el JSON global y generar las máscaras correspondientes para cada imagen.
+    \item \textbf{Segmentación de \textit{deep learning} utilizando el repositorio segmentation\_models.pytorch:} tras evaluar diferentes opciones, finalmente se optó por usar la biblioteca \texttt{segmentation\_models.pytorch}, que permite implementar múltiples arquitecturas de segmentación como U-Net, U-Net++, FPN, entre otras, con una estructura de código unificada. Esta herramienta facilitó la compración entre modelos y el ajuste eficiente de hiperparámetros.
+\end{itemize}
+    
+\subsection{Sprint 9}
+Fechas: 04/03/2025 - 18/03/2025
+\begin{itemize}
+    \item \textbf{Segmentación de \textit{deep learning} utilizando el repositorio segmentation\_models.pytorch:} continuar con el \textit{issue}. La carga estimada ha sido mayor a la estimada.
+    \item \textbf{Crear un informe sobre los resultados del proyecto:} se organizaron los resultados obtenidos tras las distintas pruebas realizadas con los modelos de segmentación. Se generó un informe inicial que cambiaría los resultados según la arquitectura con la que estuviésemos trabajando. Se incluyeron resultados visuales y cualitativos basados en los errores y aciertos del modelo. La carga estimada ha sido mayor a la estimada.
+    \item \textbf{Evaluación del rendimiento de los modelos:} se analizaron diferentes métricas como la IoU (Intersection over Union) y la precisión por clase, así como un análisis visual de las máscaras segmentadas frente a la \textit{ground truth}. Este análisis permitió identificar qué arquitectura era la más adecuada para nuestro proyecto justificando su selección.
+\end{itemize}
+
+\subsection{Sprint 10}
+Fechas: 18/03/2025 - 01/04/2025
+\begin{itemize}
+    \item \textbf{Reestructuración de las clases a segmentar:} a partir del análisis de los primeros entrenamientos, se observó un bajo rendimiento en la segmentación del cuarto ventrículo. Por ello, se optó por eliminar dicha clase y centrar el modelo en aquellas estructuras con mayor interés clínico. Además, se unificaron los hemisferios del cerebelo (inicialmente tratadas como dos clases separadas) en una sola clase, lo que contribuyó a simplificar el problema y mejorar los resultados obtenidos. La carga estimada ha sido la estimada.
+    \item \textbf{Ajuste en la configuración del modelo y entrenamiento:} se realizaron ajustes iterativos en la configuración de los modelos y parámetros de entrenamiento, con el fin de maximizar el rendimiento del modelo final. La carga fue la estimada.
+    \item \textbf{Crear un informe sobre los resultados del proyecto:} se repitió el \textit{issue} para cada cambio realizado.
+    \item \textbf{Evaluación del rendimiento de los modelos:} se repitió el \textit{issue} para cada cambio realizado.
+\end{itemize}
+
+\subsection{Sprint 11}
+Fechas: 01/04/2025 - 15/04/2025
+\begin{itemize}
+    \item \textbf{Implementación de \textit{data Augmentation} en el proceso de entrenamiento}: con el objetivo de enriquecer el conjunto de datos de entrenamiento y mejorar la robustez del modelo frente a variaciones en las imágenes de entrada, se implementaron técnicas de aumento de datos (\textit{data augmentation}). Esto incluyó rotaciones aleatorias, cambios de escala y ajuste de contraste, aplicadas a las imágenes durante el entrenamiento. La carga fue la estimada.
+    \item \textbf{Implementación de \textit{early stopping} en el proceso de entrenamiento:} para evitar el sobreajuste, se integró la técnica de \textit{early stopping}, que permitió finalizar automáticamente el entrenamiento cuando la métrica de validación dejaba de mejorar durante varias épocas consecutivas. la carga fue menor a la estimada.
+    \item \textbf{Crear un informe sobre los resultados del proyecto:} se repitió el \textit{issue} para cada técnica implementada.
+    \item \textbf{Evaluación del rendimiento de los modelos:} se repitió el \textit{issue} para cada técnica implementada.
+\end{itemize}
+
+\subsection{Sprint 12}
+Fechas: 15/04/2025 - 29/04/2025
+\begin{itemize}
+    \item \textbf{Redacción del documento del Comité de Ética:} se realizaron modificaciones en el documento del proyecto que respondían a aclaraciones que el CEIM requería.
+    \item \textbf{Implementación de una aplicación:} se diseñó e implementó una interfaz gráfica sencilla utilizando la biblioteca de Streamlit, pensada para que los profesionales clínicos pudieran utilizar la segmentación sin necesidad de conocimientos técnicos. La aplicación permite cargar una imagen ecográfica y obtener la máscara segmentada de forma automática. La carga final ha sido la estimada.
+    \item \textbf{Implementación de funcionalidades extra en la interfaz:} se añadieron funcionalidades adicionales, como la visualización de la \textit{ground truth} si está disponible y sus métricas, una leyenda con las clases segmentadas y la posibilidad de descargar un PDF con formato de informe médico que contiene los resultados. La carga estimada ha sido mayor a la estimada.
+\end{itemize}
+
+\subsection{Sprint 13}
+Fecha: 29/04/2025 - 13/05/2025
+\begin{itemize}
+     \item \textbf{Subida del proyecto a GitHub:} todo el conjunto de datos, el modelo entrenado y el código de la aplicación fueron organizados y subidos al repositorio público del proyecto en GitHub. La carga final fue la estimada. 
+     \item \textbf{Despliegue de la aplicación en Streamlit Community Cloud:} para permitir el acceso remoto a la aplicación sin necesidad de instalación, se publicó en Streamlit Community Cloud. Esta plataforma permite que cualquier usuario con conexión a Internet acceda a la aplicación a través del navegador, disponible en la URL: \url{https://fetalbrainsegmentation.streamlit.app/}.
+     \item \textbf{Redacción de la Memoria:} elaboración del documento principal del Trabajo de Fin de Grado, que incluye la introducción del problema, los objetivos, el marco teórico, la metodología empleada los resultados obtenidos, el desarrollo de la solución propuesta, las conclusiones extraídas y las posibles líneas futuras de trabajo.
+\end{itemize}
+
+\subsection{Sprint 14}
+Fechas: 13/05/2025 - 27/05/2025
+\begin{itemize}
+     \item \textbf{Redacción del README.md}: se redactó un archivo README.md detallado para el repositorio de GitHub. Incluye una descripción del proyecto, instrucciones de instalación y ejecución local. La carga final fue la estimada.
+    \item \textbf{Redacción de anexos:} preparación y estructuración de los anexos, donde se incluirán los materiales complementarios como  la planificación, el manual para el usuario, el manual del programador, la descripción de los datos y el diseño del proyecto.
+    \item \textbf{Redacción de la memoria:} continuar con la redacción de la memoria. La carga estimada ha sido mayor a la estimada.
+\end{itemize}
+
+\subsection{Sprint 15}
+Fechas: 27/05/2025 - 10/06/2025
+\begin{itemize}
+    \item \textbf{Redacción de anexos:} continuar con la redacción de los anexos. La carga estimada ha sido mayor a la estimada.
+    \item \textbf{Subir carpetas y documentos a Github}: almacenamiento en el repositorio de todo el contenido desarrollado durante el proyecto. La carga final fue la estimada.
+\end{itemize}
+
+
 
     
 \subsection{Planificación económica}
 En la planificación económica se van a tener en cuenta los gastos de software, hardware y de personal, con el objetivo de proporcionar una estimación de los recursos económicos necesarios para el desarrollo del proyecto.
 
 \subsubsection{Costes de hardware}
-El desarrollo se ha realizado desde un ordenador portátil sin unidad de procesamiento gráfico (GPU) dedicada. Dada la alta demanda computacional del entrenamiento de modelos de segmentación basados en redes neuronales convolucionales, se ha optado por utilizar la plataforma Google Colab Pro que ofrece acceso a entornos con GPU. 
+El desarrollo se ha realizado desde un ordenador portátil sin unidad de procesamiento gráfico (GPU) dedicada. Dada la alta demanda computacional del entrenamiento de modelos de segmentación basados en redes neuronales convolucionales, se ha optado por utilizar la plataforma Google Colab Pro que ofrece acceso a entornos con GPU.
 
-Aunque esta opción ha sido funcional, lo adecuado para una ejecución fluida y continua de este tipo de proyectos sería disponer de un equipo con GPU dedicada. A continuación, se presentan dos escenarios alternativos:
+Aunque esta opción ha sido funcional, lo adecuado para una ejecución fluida y continua de este tipo de proyectos sería disponer de un equipo con GPU dedicada. A continuación, se presentan los dos escenarios alternativos que han sido considerados para la realización de este proyecto.
 
 \textbf{Opción A: Uso de Google Colab Pro}
+A pesar de que Google Colab es una herramienta de software, se ha incluido esta opción en costes de hardware, ya que ha supuesto una alternativa a la adquisición de una GPU, que es un hardware.
 
 Esta opción considera la amortización del equipo de trabajo principal y el coste de la suscripción a Google Colab Pro \cite{googlecolabpro_ref}. Se ha estimado el tiempo de uso en 7 meses para el portátil (duración del proyecto) y 6 meses para la suscripción, asumiendo un uso intensivo durante la fase de modelado. Los costes asociados a esta opción se resumen en la Tabla \ref{tab:costes_hardware_A}.
 
@@ -122,7 +156,7 @@ Esta opción considera la amortización del equipo de trabajo principal y el cos
     Suscripción Google Colab Pro  & 10,79 €/mes  & -- & 6 & 64,74\\
     \bottomrule
     \end{tabular}
-    \caption{Costes de hardware: Uso de Google Colab Pro (Opción A)} \label{tab:costes_hardware_A}
+    \caption{Costes de hardware: Uso de Google Colab Pro (Opción A).} \label{tab:costes_hardware_A}
 \end{table}
 \textbf{Opción B: Adquisición de equipo con GPU dedicada}
 Como alternativa, se considera la adquisición de un ordenador portátil con GPU dedicada, lo que permitiría realizar los entrenamientos localmente. La amortización se calcula sobre el mismo periodo de uso. Los costes asociados a esta opción se resumen en la Tabla~\ref{tab:costes_hardware_B}.
@@ -134,10 +168,13 @@ Como alternativa, se considera la adquisición de un ordenador portátil con GPU
     Ordenador portátil con GPU  & 1.800 & 5 & 7 & 210\\
     \bottomrule
     \end{tabular}
-    \caption{Costes de hardware: Opción B (Adquisición de equipo con GPU dedicada)} \label{tab:costes_hardware_B}
+    \caption{Costes de hardware: Opción B (Adquisición de equipo con GPU dedicada).} \label{tab:costes_hardware_B}
 \end{table}
 \subsubsection{Costes de software}
 Todas las herramientas utilizadas durante el desarrollo han sido gratuitas y de código abierto (ej. Python, scikit-learn, OpenCV, GitHub). Por lo tanto, no se ha incurrido en costes por licencias o suscripciones para el desarrollo. 
+
+Para la realización de las máscaras se consideró inicialmente el uso de la versión de pago de Roboflow. Sin embargo, dado el pequeño tamaño del conjunto de datos empleado, las funcionalidades ofrecidas en su versión gratuita resultaron ser suficientes para cubrir las necesidades del proyecto.
+
 
 \subsubsection{Costes de personal}
 El desarrollo del proyecto ha requerido diversas tareas especializadas, incluyendo programación, procesamiento de datos, entrenamiento y evaluación de modelos de aprendizaje profundo, y despliegue de una aplicación funcional. Se estima una dedicación total de 8 meses a media jornada.
@@ -167,7 +204,7 @@ En la Tabla \ref{tab:costes_personal} se detallan los costes asociados al person
     Contingencias formación (empresa) & 0,60\% & 6,75\\
     \textbf{Total cotizaciones (empresa)} & -- & 334,13\\
     \end{tabular}
-    \caption{Costes de personal (estimación mensual)} \label{tab:costes_personal}
+    \caption{Costes de personal (estimación mensual).} \label{tab:costes_personal}
 \end{table}
 
 El coste total del personal se ha calculado considerando una dedicación continuada de 8 meses a media jornada de un perfil técnico con las competencias requeridas para el proyecto.
@@ -198,7 +235,7 @@ El coste total del personal se ha calculado considerando una dedicación continu
     Coste de Personal & 11.673,04 €\\
     \textbf{Total} & 11.842,78 €\\
     \end{tabular}
-    \caption{Costes totales del proyecto considerando la Opción A} \label{tab:costes_total_A}
+    \caption{Costes totales del proyecto considerando la Opción A.} \label{tab:costes_total_A}
 \end{table}
 
  \begin{table}[h]
@@ -212,7 +249,7 @@ El coste total del personal se ha calculado considerando una dedicación continu
     \textbf{Total} & 11.883,04 €\\
     \hfill
     \end{tabular}
-    \caption{Costes totales del proyecto considerando la Opción B} \label{tab:costes_total_B}
+    \caption{Costes totales del proyecto considerando la Opción B.} \label{tab:costes_total_B}
 \end{table}
 
 \subsection{Viabilidad legal}

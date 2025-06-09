@@ -45,7 +45,7 @@ Las neuronas artificiales se organizan en capas \cite{ann2004}:
 \end{itemize}
 Cada conexión entre neuronas tiene asociado un peso que determina la importancia de la señal transmitida. Las neuronas aplican una función de activación a la suma ponderada de sus entradas, lo que introduce no linealidades y permite modelar las relaciones complejas \cite{deeplearning2016}.
 
-El proceso de aprendizaje de estas redes se basa en dos fases principales \cite{deeplearning2016}:
+El proceso de aprendizaje de estas redes se basa principalmente en dos fases \cite{deeplearning2016}:
 \begin{itemize}
     \item \textbf{Propagación hacia adelante (forward propagation)}: los datos se transmiten desde la capa de entrada hasta la salida, generando una predicción.
     \item \textbf{Retropropagación del error (\textit{backpropagation})}: se calcula el error entre la predicción obtenida y la salida deseada, y este error se propaga en sentido inverso a través de la red, actualizando los pesos mediante algoritmos de optimización.
@@ -58,14 +58,14 @@ Las redes neuronales convolucionales o \textit{Convolutional Neural Networks} (C
 
 La CNN típica consta de varias capas, cada una con un propósito específico en el proceso de extracción y aprendizaje de características:  
 \begin{itemize}
-    \item Capa de Convolución: esta capa utiliza filtros o kernels que se deslizan sobre la imagen de entrada para extraer características locales, como bordes, texturas o patrones. Cada filtro está diseñado para responder a características específicas. Se puede destacar que, al aplicar varios filtros, la red aprende a detectar una gran variedad de rasgos relevantes para la tarea \cite{sotil2022cnn}.
+    \item Capa de convolución: esta capa utiliza filtros o kernels que se deslizan sobre la imagen de entrada para extraer características locales, como bordes, texturas o patrones. Cada filtro está diseñado para responder a características específicas. Se puede destacar que, al aplicar varios filtros, la red aprende a detectar una gran variedad de rasgos relevantes para la tarea \cite{sotil2022cnn}.
     \item Funciones de activación: son funciones no lineales que se aplican a la salida de cada neurona para introducir no linealidad en el modelo, permitiendo así aprender relaciones complejas. Algunas de las funciones más comunes son:
     \begin{itemize}
-    \item Capa \texttt{ReLU} (Unidad Lineal Rectificada): activa solo los valores positivos, ayudando a evitar problemas de saturación y acelerando el entrenamiento \cite{ibmcnn}. 
-    \item  Tanh (Tangente hiperbólica): escala la salida entre -1 y 1, útil en ciertos contextos pero puede sufrir problemas de saturación\cite{deeplearning2016}.
-    \item Sigmoide: transforma la salida en un valor entre 0 y 1, especialmente útil para tareas de clasificación binaria, aunque también puede saturarse y ralentizar el aprendizaje\cite{deeplearning2016}.
+    \item \texttt{ReLU} (Unidad Lineal Rectificada): activa solo los valores positivos, ayudando a evitar problemas de saturación y acelerando el entrenamiento \cite{ibmcnn}. 
+    \item  TanH (Tangente hiperbólica): escala la salida entre -1 y 1, útil en ciertos contextos pero puede sufrir problemas de saturación \cite{deeplearning2016}.
+    \item Sigmoide: transforma la salida en un valor entre 0 y 1, especialmente útil para tareas de clasificación binaria, aunque también puede saturarse y ralentizar el aprendizaje \cite{deeplearning2016}.
     \end{itemize}
-    \item Capa de Agrupación (Pooling): la función principal de esta capa es reducir la dimensionalidad de las representaciones obtenidas en las capas anteriores, facilitando el manejo de la información y reduciendo el costo computacional. Los dos métodos comunes son \cite{ajmal2018cnn, ibmcnn}:
+    \item Capa de Agrupación (Pooling): la función principal de esta capa es reducir la dimensionalidad de las representaciones obtenidas en las capas anteriores, facilitando el manejo de la información y reduciendo el costo computacional. Los dos métodos comunes son \cite{ibmcnn, ajmal2018cnn}:
     \begin{itemize}
         \item Max pooling: selecciona el valor máximo en cada región, conservando las características más importantes.
         \item Average pooling: calcula el promedio de los valores, proporcionando una visión más general de la información en esa región.
@@ -108,15 +108,13 @@ Alteraciones en su desarrollo, como la hipoplasia, se asocian a síndromes neuro
 \subsection{Cisterna magna}
 La cisterna magna o cisterna cerebelomodular es la mayor de las cisternas subaracnoideas del sistema nervioso central. Se localiza entre la superficie inferior del cerebelo y facilita la circulación del líquido cefalorraquídeo (LCR), permitiendo su circulación desde el cuarto ventrículo hacia el espacio subaracnoideo que rodea el encéfalo y la médula espinal \cite{patel2023cisternamagna}. En la Figura \ref{fig: parte_anatomicas_cerebelo}, la cisterna aparece en color amarillo.
 
-Alteraciones en su desarrollo, como la dilatación excesiva, pueden asociarse a diversas malformaciones cerebelosas, como el síndrome de Dandy-Walker y la mega cisterna magna. Estas patologías suelen estar interrelacionadas ya que la ausencia de vermis o hipoplasia del vermis cerebeloso puede generar un agrandamiento anómalo del espacio subaracnoideo, dando lugar a una cisterna magna.\cite{patel2023cisternamagna}
+Alteraciones en su desarrollo, como la dilatación excesiva, pueden asociarse a diversas malformaciones cerebelosas, como el síndrome de Dandy-Walker y la mega cisterna magna. Estas patologías suelen estar interrelacionadas ya que la ausencia de vermis o hipoplasia del vermis cerebeloso puede generar un agrandamiento anómalo del espacio subaracnoideo, dando lugar a una cisterna magna \cite{patel2023cisternamagna}.
+
 \subsection{Hemisferios cerebelosos}
-Los hemisferios cerebelosos constituyen las regiones laterales del cerebelo y se encuentran separados por el vermis. Estas estructuras, junto con la cisterna magna,
-forman parte del plano transcebeloso evaluado en la ecografía prenatal. Cada
-hemisferio se divide en lóbulos y lobulillos, cuya corteza se organiza en capas
-que participan en la coordinación motora y el aprendizaje de movimientos \cite{kenhub}. En la Figura \ref{fig: parte_anatomicas_cerebelo}, los hemisferios cerebelosos están marcados en color morado.
+Los hemisferios cerebelosos constituyen las regiones laterales del cerebelo y se encuentran separados por el vermis. Estas estructuras, junto con la cisterna magna, forman parte del plano transcebeloso evaluado en la ecografía prenatal. Cada hemisferio se divide en lóbulos y lobulillos, cuya corteza se organiza en capas que participan en la coordinación motora y el aprendizaje de movimientos \cite{kenhub}. En la Figura \ref{fig: parte_anatomicas_cerebelo}, los hemisferios cerebelosos están marcados en color morado.
 
 
-Durante el desarrollo fetal, los hemisferios cerebelosos se expanden lateralmente desde los labios rómbicos, contribuyendo a la formación completa del cerebelo. Alteraciones en su desarrollo, como la hipoplasia cerebelosa, pueden comprometer la coordinación motora y otras funciones neurológicas \cite{volpecerebelo}.
+Durante el desarrollo fetal, los hemisferios cerebelosos se expanden lateralmente desde los labios rómbicos, formando el cerebelo. Alteraciones en su desarrollo, como la hipoplasia cerebelosa, pueden comprometer la coordinación motora y otras funciones neurológicas \cite{volpecerebelo}.
 
 \begin{figure}[h]
     \centering
@@ -125,13 +123,12 @@ Durante el desarrollo fetal, los hemisferios cerebelosos se expanden lateralment
     \label{fig: parte_anatomicas_cerebelo}
 \end{figure}
 
-\section{Estado del arte y trabajos relacionados.}
-
+\section{Estado del arte y trabajos relacionados}
 La búsqueda de artículos e investigaciones relacionadas con el proyecto se ha realizado empleando buscadores científicos como \textit{PubMed}, \textit{Google Scholar}, \textit{Web of Science} y \textit{Nature}. A continuación, se exponen los estudios más relevantes encontrados en el ámbito de la segmentación de imágenes médicas mediante técnicas de DL, con especial atención a la aplicación en estructuras cerebrales fetales y análisis de imágenes de ultrasonido.
 
-En el contexto del desarrollo prenatal humano, la detección y análisis temprano de estructuras como el cerebelo fetal es de vital importancia, dada su implicación en el desarrollo neurológico \cite{volpe2009} \cite{koning2017impacts}. Para abordar la complejidad inherente a las imágenes de ultrasonido y la variabilidad anatómica, diversos estudios han explorado la aplicación de Redes Neuronales Convolucionales (CNN) y arquitecturas avanzadas de segmentación basadas en DL \cite{hesamian2019}.
+En el contexto del desarrollo prenatal humano, la detección y análisis temprano de estructuras como el cerebelo fetal es de vital importancia, dada su implicación en el desarrollo neurológico \cite{volpe2009, koning2017impacts}. Para abordar la complejidad inherente a las imágenes de ultrasonido y la variabilidad anatómica, diversos estudios han explorado la aplicación de Redes Neuronales Convolucionales (CNN) y arquitecturas avanzadas de segmentación basadas en DL \cite{hesamian2019}.
 
-A nivel más general, diferentes revisiones han sintetizado los avances más relevantes en el uso de CNN para la segmentación de imágenes médicas \cite{ajmal2018cnn, hesamian2019}. Estos trabajos destacan la eficacia de arquitecturas como U-Net, ampliamente utilizadas por su capacidad para preservar tanto el contexto global como los detalles espaciales en tareas clínicas complejas.
+A nivel más general, diferentes revisiones han sintetizado los avances más relevantes en el uso de CNN para la segmentación de imágenes médicas \cite{hesamian2019, ajmal2018cnn}. Estos trabajos destacan la eficacia de arquitecturas como U-Net, ampliamente utilizadas por su capacidad para preservar tanto el contexto global como los detalles espaciales en tareas clínicas complejas.
 
 Además, existen ejemplos de aplicación técnica como el presentado por Plain Concepts \cite{plain2021}, donde se describe el uso de modelos inspirados en \texttt{U-Net} para la segmentación precisa de órganos en diversas modalidades de imagen médica. Este tipo de contribuciones demuestra el potencial del aprendizaje profundo en entornos clínicos reales, complementando la evidencia académica.
 
